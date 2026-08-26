@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panell Salut</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+html,body{margin:0;background:#fff}
+body{font-family:'Archivo',sans-serif}
+@keyframes secIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes sheetIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+*{scrollbar-width:none;-ms-overflow-style:none}
+*::-webkit-scrollbar{width:0;height:0;display:none}
+input,textarea{font-family:'Archivo',sans-serif}
+input:focus,textarea:focus{outline:none;border-color:#1a1815}
+input::placeholder,textarea::placeholder{color:#c9c3b4}
+</style></helmet>
+<div style="width:100%;max-width:480px;min-height:100vh;min-height:100dvh;margin:0 auto;background:#fff;color:#1a1815;font-family:'Archivo',sans-serif;box-sizing:border-box;position:relative;overflow:hidden">
+
+  <sc-if value="{{ showMain }}" hint-placeholder-val="{{ true }}">
+  <div style="position:absolute;inset:0;box-sizing:border-box;padding:64px 22px 104px;display:flex;flex-direction:column">
+
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:26px;flex-shrink:0">
+      <h1 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:48px;letter-spacing:.01em;margin:4px 0 4px;text-align:center">{{ title }}</h1>
+    </div>
+
+    <sc-if value="{{ onSistemes }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 20px">
+          <div style="font-size:13px;line-height:1.6;color:#a29c8c;max-width:220px;text-wrap:pretty">Encara no hi ha cap sistema. Crea el primer per definir com vols que sigui una setmana.</div>
+        </div>
+      </sc-if>
+
+      <div style="flex:1;overflow-y:auto;margin:0 -4px;padding:0 4px 4px;display:flex;flex-direction:column">
+        <sc-for list="{{ systems }}" as="sys" hint-placeholder-count="3">
+          <div onClick="{{ sys.open }}" style="display:flex;align-items:center;gap:14px;padding:17px 4px;border-bottom:1px solid #eee9dc;cursor:pointer;transition:opacity .25s ease" style-hover="opacity:.55">
+            <span style="{{ sys.dot }}"></span>
+            <span style="flex:1;font-family:'Oswald',sans-serif;font-size:20px;font-weight:500;letter-spacing:.01em">{{ sys.name }}</span>
+            <span style="display:flex;gap:3px;align-items:flex-end">
+              <sc-for list="{{ sys.pips }}" as="pip" hint-placeholder-count="3">
+                <span style="{{ pip.style }}"></span>
+              </sc-for>
+            </span>
+            <span style="width:9px;height:9px;border-right:2px solid #d2ccbb;border-top:2px solid #d2ccbb;transform:rotate(45deg);display:block;flex-shrink:0"></span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div onClick="{{ newSystem }}" style="flex-shrink:0;margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid #1a1815;border-radius:999px;padding:15px 24px;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">
+        <span style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:.02em">Nou sistema</span>
+        <span style="position:relative;width:16px;height:16px;display:block;flex-shrink:0">
+          <span style="position:absolute;top:7px;left:0;width:16px;height:2px;background:#B3121A;display:block"></span>
+          <span style="position:absolute;left:7px;top:0;width:2px;height:16px;background:#B3121A;display:block"></span>
+        </span>
+      </div>
+
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ onActual }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+
+      <div style="display:flex;gap:24px;justify-content:center;margin:-12px 0 22px;flex-shrink:0">
+        <sc-for list="{{ actualViews }}" as="v" hint-placeholder-count="2">
+          <div onClick="{{ v.go }}" style="{{ v.style }}">{{ v.label }}</div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ viewWeek }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;margin:0 -4px;padding:0 4px">
+
+        <sc-if value="{{ curNone }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:0 16px">
+            <div style="font-size:13px;line-height:1.6;color:#a29c8c;max-width:220px;text-wrap:pretty">La setmana {{ curWeekNum }} no té cap sistema assignat.</div>
+            <div onClick="{{ openCurWeek }}" style="border:2px solid #1a1815;border-radius:999px;padding:13px 22px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">Assigna un sistema</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ curHas }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:26px;padding-bottom:12px">
+
+          <div onClick="{{ openCurWeek }}" style="display:flex;align-items:center;gap:13px;padding-bottom:2px;cursor:pointer;transition:opacity .25s ease" style-hover="opacity:.55">
+            <span style="{{ curDot }}"></span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
+              <span style="font-family:'Oswald',sans-serif;font-size:21px;font-weight:600;letter-spacing:.01em">{{ curName }}</span>
+              <span style="font-size:11px;color:#a29c8c;letter-spacing:.03em">{{ curRange }}</span>
+            </div>
+            <span style="width:9px;height:9px;border-right:2px solid #d2ccbb;border-top:2px solid #d2ccbb;transform:rotate(45deg);display:block;flex-shrink:0"></span>
+          </div>
+
+          <sc-if value="{{ curHasSport }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div onClick="{{ toggleSport }}" style="display:flex;align-items:center;gap:10px;cursor:pointer">
+              <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373;cursor:pointer">Esport</label>
+              <sc-if value="{{ sportOpen }}" hint-placeholder-val="{{ true }}">
+                <span style="flex:1;height:1px;background:#f2eee2;display:block"></span>
+                <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#c1bbab;letter-spacing:.04em">{{ sportProgress }}</span>
+              </sc-if>
+              <sc-if value="{{ sportShut }}" hint-placeholder-val="{{ false }}">
+                <span style="flex:1;height:8px;border-radius:999px;background:#f2eee2;display:block;overflow:hidden;min-width:0">
+                  <span style="{{ sportFill }}"></span>
+                </span>
+                <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#8a8373;letter-spacing:.04em">{{ sportPct }}</span>
+              </sc-if>
+              <span style="{{ sportChevron }}"></span>
+            </div>
+            <sc-if value="{{ sportOpen }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-wrap:wrap;gap:11px">
+              <sc-for list="{{ curSport }}" as="g" hint-placeholder-count="2">
+                <div style="{{ g.style }}">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                    <span style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;letter-spacing:.02em">{{ g.label }}</span>
+                    <span style="font-size:11px;color:#c1bbab;font-weight:600">{{ g.count }}</span>
+                  </div>
+                  <sc-for list="{{ g.days }}" as="d" hint-placeholder-count="1">
+                    <div onClick="{{ d.toggle }}" style="border-top:2px solid #e6e0cf;margin-top:11px;padding-top:9px;display:flex;align-items:center;gap:8px;cursor:pointer">
+                      <span style="{{ d.box }}">{{ d.tick }}</span>
+                      <span style="{{ d.titleStyle }}">{{ d.title }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+            </sc-if>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ curHasTasks }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column">
+            <div onClick="{{ toggleTasks }}" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer">
+              <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373;cursor:pointer">Tasques</label>
+              <sc-if value="{{ tasksOpen }}" hint-placeholder-val="{{ true }}">
+                <span style="flex:1;height:1px;background:#f2eee2;display:block"></span>
+                <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#c1bbab;letter-spacing:.04em">{{ tasksProgress }}</span>
+              </sc-if>
+              <sc-if value="{{ tasksShut }}" hint-placeholder-val="{{ false }}">
+                <span style="flex:1;height:8px;border-radius:999px;background:#f2eee2;display:block;overflow:hidden;min-width:0">
+                  <span style="{{ tasksFill }}"></span>
+                </span>
+                <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#8a8373;letter-spacing:.04em">{{ tasksPct }}</span>
+              </sc-if>
+              <span style="{{ tasksChevron }}"></span>
+            </div>
+            <sc-if value="{{ tasksOpen }}" hint-placeholder-val="{{ true }}">
+            <sc-for list="{{ curTasks }}" as="t" hint-placeholder-count="3">
+              <div onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:11px;border-bottom:1px solid #f2eee2;padding:11px 0;cursor:pointer">
+                <span style="{{ t.box }}">{{ t.tick }}</span>
+                <span style="{{ t.textStyle }}">{{ t.text }}</span>
+              </div>
+            </sc-for>
+            </sc-if>
+          </div>
+          </sc-if>
+
+        </div>
+        </sc-if>
+
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ viewProgres }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;margin:0 -4px;padding:0 4px 8px">
+
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex-shrink:0;padding-bottom:6px">
+          <div onClick="{{ prevYear }}" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:#c1bbab;font-size:18px;cursor:pointer;transition:color .25s ease" style-hover="color:#1a1815">‹</div>
+          <div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;letter-spacing:.04em">{{ year }}</div>
+          <div onClick="{{ nextYear }}" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:#c1bbab;font-size:18px;cursor:pointer;transition:color .25s ease" style-hover="color:#1a1815">›</div>
+        </div>
+        <div style="text-align:center;font-size:11.5px;color:#a29c8c;letter-spacing:.02em;padding-bottom:20px;flex-shrink:0">{{ statusLine }}</div>
+
+        <sc-for list="{{ months }}" as="m" hint-placeholder-count="12">
+          <div style="display:flex;align-items:center;gap:11px;padding-bottom:7px">
+            <div style="width:24px;flex-shrink:0;font-size:9.5px;letter-spacing:.1em;font-weight:800;color:#a29c8c">{{ m.label }}</div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:7px">
+              <sc-for list="{{ m.weeks }}" as="w" hint-placeholder-count="4">
+                <div onClick="{{ w.tap }}" style="{{ w.style }}">{{ w.num }}</div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+
+        <sc-if value="{{ hasLegend }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;gap:9px 16px;border-top:1px solid #eee9dc;margin-top:16px;padding-top:16px">
+          <sc-for list="{{ legend }}" as="l" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="{{ l.dot }}"></span>
+              <span style="font-size:11px;color:#8a8373;letter-spacing:.02em">{{ l.name }}</span>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+
+      </div>
+      </sc-if>
+
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ onLlibres }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;margin:-16px 0 8px;flex-shrink:0">
+        <span style="font-family:'Oswald',sans-serif;font-size:44px;font-weight:700;line-height:1;letter-spacing:.01em">{{ readCount }}</span>
+        <span style="font-size:11px;letter-spacing:.14em;font-weight:800;color:#8a8373">{{ readLabel }}</span>
+        <sc-if value="{{ hasReading }}" hint-placeholder-val="{{ false }}">
+          <span onClick="{{ goToReading }}" style="margin-top:9px;font-size:12.5px;color:#B3121A;cursor:pointer;letter-spacing:.01em;text-align:center">Ara: {{ readingTitle }}</span>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ booksEmpty }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 24px">
+          <div style="font-size:13px;line-height:1.6;color:#a29c8c;max-width:210px;text-wrap:pretty">El camí encara no ha començat. Afegeix el primer llibre.</div>
+        </div>
+      </sc-if>
+
+      <div ref="{{ pathRef }}" style="flex:1;overflow-y:auto;margin:0 -22px;padding:0 22px">
+        <div style="{{ pathBox }}">
+          <svg viewBox="{{ pathView }}" style="{{ pathSvg }}" preserveAspectRatio="none">
+            <path d="{{ pathD }}" fill="none" stroke="#e6e0cf" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="{{ tailD }}" fill="none" stroke="#e6e0cf" stroke-width="1.5" stroke-linecap="round" opacity="0.45"></path>
+          </svg>
+          <sc-for list="{{ bookNodes }}" as="b" hint-placeholder-count="0">
+            <div style="{{ b.wrap }}">
+              <div onClick="{{ b.open }}" style="{{ b.row }}">
+                <span style="{{ b.dot }}"></span>
+                <span style="{{ b.titleStyle }}">{{ b.title }}</span>
+              </div>
+              <sc-if value="{{ b.showYear }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ b.yearStyle }}">{{ b.year }}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div onClick="{{ newBook }}" style="flex-shrink:0;margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid #1a1815;border-radius:999px;padding:15px 24px;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">
+        <span style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:.02em">Nou llibre</span>
+        <span style="position:relative;width:16px;height:16px;display:block;flex-shrink:0">
+          <span style="position:absolute;top:7px;left:0;width:16px;height:2px;background:#B3121A;display:block"></span>
+          <span style="position:absolute;left:7px;top:0;width:2px;height:16px;background:#B3121A;display:block"></span>
+        </span>
+      </div>
+
+    </div>
+    </sc-if>
+
+    <div style="position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:14px 10px 28px;background:#fff">
+      <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="5">
+        <div onClick="{{ tab.go }}" style="{{ tab.style }}">
+          <div style="{{ tab.mark }}"></div>
+          {{ tab.label }}
+        </div>
+      </sc-for>
+    </div>
+
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showBookForm }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#fff;z-index:20;display:flex;flex-direction:column;padding:64px 22px 34px;box-sizing:border-box;animation:secIn .3s cubic-bezier(.22,.8,.28,1) both">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;padding-bottom:26px">
+      <div onClick="{{ cancelBook }}" style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#a29c8c;cursor:pointer;transition:color .25s ease" style-hover="color:#1a1815">Cancel·la</div>
+      <div style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;letter-spacing:.02em">Nou llibre</div>
+      <div onClick="{{ saveBook }}" style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#B3121A;cursor:pointer">Guarda</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:26px">
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Títol</label>
+        <input value="{{ bookTitle }}" onChange="{{ setBookTitle }}" placeholder="{{ bookHint }}" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:23px;font-weight:500;color:#1a1815;padding:0 0 9px;width:100%;box-sizing:border-box;transition:border-color .25s ease">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Estat</label>
+        <div style="display:flex;gap:10px">
+          <sc-for list="{{ bookStates }}" as="s" hint-placeholder-count="2">
+            <div onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <sc-if value="{{ bookIsRead }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Acabat el</label>
+        <input type="date" value="{{ bookDate }}" onChange="{{ setBookDate }}" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:19px;font-weight:500;color:#1a1815;padding:0 0 9px;width:100%;box-sizing:border-box">
+      </div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showBookCard }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeBook }}" style="position:absolute;inset:0;background:rgba(26,24,21,.2);z-index:14"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -18px 50px rgba(26,24,21,.22);display:flex;flex-direction:column;gap:20px;z-index:15;padding:28px 24px 34px;animation:sheetIn .34s cubic-bezier(.22,.8,.28,1) both">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+      <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+        <span style="font-family:'Oswald',sans-serif;font-size:26px;font-weight:600;line-height:1.15;letter-spacing:.01em;text-wrap:pretty">{{ cardTitle }}</span>
+        <span style="font-size:11.5px;color:#a29c8c;letter-spacing:.03em">{{ cardMeta }}</span>
+      </div>
+      <div onClick="{{ closeBook }}" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#c9c3b4;font-size:19px;cursor:pointer;flex-shrink:0;transition:color .2s ease" style-hover="color:#1a1815">×</div>
+    </div>
+    <sc-if value="{{ cardIsReading }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ finishBook }}" style="border:2px solid #1a1815;border-radius:999px;padding:13px 22px;text-align:center;font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">Marca com a llegit</div>
+    </sc-if>
+    <div onClick="{{ removeBook }}" style="{{ cardDelStyle }}">{{ cardDelLabel }}</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showWeek }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeWeek }}" style="position:absolute;inset:0;background:rgba(26,24,21,.2);z-index:14"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:58%;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -18px 50px rgba(26,24,21,.22);display:flex;flex-direction:column;z-index:15;animation:sheetIn .34s cubic-bezier(.22,.8,.28,1) both">
+    <div style="flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:22px 22px 15px;border-bottom:1px solid #eee9dc">
+      <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+        <div style="font-family:'Oswald',sans-serif;font-size:24px;font-weight:600;letter-spacing:.01em">{{ weekTitle }}</div>
+        <div style="font-size:11.5px;color:#a29c8c;letter-spacing:.03em">{{ weekRange }}</div>
+      </div>
+      <div onClick="{{ closeWeek }}" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#c9c3b4;font-size:19px;cursor:pointer;flex-shrink:0;transition:color .2s ease" style-hover="color:#1a1815">×</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:18px 22px 30px;display:flex;flex-direction:column">
+      <sc-if value="{{ weekPastSys }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:13px;padding-bottom:20px">
+          <span style="{{ weekDot }}"></span>
+          <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
+            <span style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:#1a1815">{{ weekSysName }}</span>
+            <span style="font-size:11px;color:#b5afa0">Setmana tancada</span>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ weekPastEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px">
+          <div style="font-size:13px;line-height:1.6;color:#a29c8c;max-width:200px;text-wrap:pretty">Aquesta setmana ja ha passat i no tenia cap sistema assignat.</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noSystems }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px">
+          <div style="font-size:13px;line-height:1.6;color:#a29c8c;max-width:210px;text-wrap:pretty">Encara no has creat cap sistema. Crea'n un a Sistemes per poder-lo assignar.</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ weekAssigned }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:13px;padding-bottom:22px">
+        <sc-for list="{{ weekStats }}" as="s" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="width:52px;flex-shrink:0;font-size:10px;letter-spacing:.12em;font-weight:800;color:#8a8373">{{ s.label }}</span>
+            <span style="flex:1;height:8px;border-radius:999px;background:#f2eee2;display:block;overflow:hidden;min-width:0">
+              <span style="{{ s.fill }}"></span>
+            </span>
+            <span style="font-family:'Oswald',sans-serif;font-size:12.5px;font-weight:500;color:#8a8373;letter-spacing:.04em;width:38px;text-align:right;flex-shrink:0">{{ s.pct }}</span>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+      <sc-for list="{{ weekOptions }}" as="o" hint-placeholder-count="3">
+        <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:13px;border-bottom:1px solid #f2eee2;padding:14px 0;cursor:pointer;transition:opacity .25s ease" style-hover="opacity:.55">
+          <span style="{{ o.dot }}"></span>
+          <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
+            <span style="{{ o.nameStyle }}">{{ o.name }}</span>
+            <span style="font-size:11px;color:#b5afa0">{{ o.summary }}</span>
+          </div>
+          <span style="{{ o.markStyle }}">{{ o.mark }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showSheet }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;left:0;right:0;top:46px;bottom:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -18px 50px rgba(26,24,21,.22);display:flex;flex-direction:column;z-index:20;animation:sheetIn .38s cubic-bezier(.22,.8,.28,1) both">
+    <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:22px 22px 14px;border-bottom:1px solid #eee9dc">
+      <div onClick="{{ sheetCancel }}" style="font-size:11px;letter-spacing:.12em;font-weight:700;color:#a29c8c;cursor:pointer">Cancel·la</div>
+      <div style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.06em">{{ sheetTitleLabel }}</div>
+      <div onClick="{{ sheetSave }}" style="font-size:11px;letter-spacing:.12em;font-weight:800;color:#B3121A;cursor:pointer">Fet</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:28px 22px 40px;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">{{ sheetNameLabel }}</label>
+        <input value="{{ sheetName }}" onChange="{{ setSheetName }}" placeholder="{{ sheetNamePlaceholder }}" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:24px;font-weight:600;color:#1a1815;padding:0 0 8px;transition:border-color .25s ease">
+      </div>
+      <sc-if value="{{ sheetHasDetails }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Detalls</label>
+          <textarea value="{{ sheetDetails }}" onChange="{{ setSheetDetails }}" rows="7" placeholder="Opcional" style="border:2px solid #eee9dc;border-radius:4px;background:transparent;font-size:14px;line-height:1.65;color:#1a1815;padding:13px 14px;resize:none;transition:border-color .25s ease"></textarea>
+        </div>
+      </sc-if>
+      <sc-if value="{{ sheetGymNote }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column">
+          <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373;margin-bottom:12px">Exercicis</label>
+          <sc-if value="{{ noExercises }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:12.5px;line-height:1.6;color:#c1bbab;text-wrap:pretty;padding-bottom:4px">Cap exercici encara.</div>
+          </sc-if>
+          <sc-for list="{{ sheetExercises }}" as="ex" hint-placeholder-count="2">
+            <div style="border-bottom:1px solid #f2eee2">
+              <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0">
+                <span style="{{ ex.bar }}"></span>
+                <div onClick="{{ ex.toggle }}" style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0;cursor:pointer">
+                  <span style="display:flex;align-items:baseline;gap:9px;min-width:0">
+                    <span style="font-family:'Oswald',sans-serif;font-size:16.5px;font-weight:500;color:#1a1815">{{ ex.name }}</span>
+                    <span style="{{ ex.volStyle }}">{{ ex.vol }}</span>
+                  </span>
+                  <span style="font-size:11px;color:#a29c8c;letter-spacing:.02em">{{ ex.meta }}</span>
+                </div>
+                <div onClick="{{ ex.toggle }}" style="{{ ex.prescStyle }}">{{ ex.presc }}</div>
+                <div onClick="{{ ex.remove }}" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:#c9c3b4;font-size:17px;cursor:pointer;flex-shrink:0;transition:color .2s ease" style-hover="color:#B3121A">×</div>
+              </div>
+              <sc-if value="{{ ex.open }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:10px;padding:2px 0 16px 16px;animation:secIn .26s cubic-bezier(.22,.8,.28,1) both">
+                  <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                    <label style="font-size:9.5px;letter-spacing:.14em;font-weight:800;color:#a29c8c">Sèries</label>
+                    <input value="{{ ex.sets }}" onChange="{{ ex.setSets }}" placeholder="4" inputmode="numeric" style="border:2px solid #eee9dc;border-radius:4px;background:transparent;font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:#1a1815;padding:9px 10px;width:100%;box-sizing:border-box;transition:border-color .25s ease">
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                    <label style="font-size:9.5px;letter-spacing:.14em;font-weight:800;color:#a29c8c">Reps</label>
+                    <input value="{{ ex.reps }}" onChange="{{ ex.setReps }}" placeholder="8" inputmode="numeric" style="border:2px solid #eee9dc;border-radius:4px;background:transparent;font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:#1a1815;padding:9px 10px;width:100%;box-sizing:border-box;transition:border-color .25s ease">
+                  </div>
+                  <div style="flex:1.2;display:flex;flex-direction:column;gap:6px">
+                    <label style="font-size:9.5px;letter-spacing:.14em;font-weight:800;color:#a29c8c">Pes · kg</label>
+                    <input value="{{ ex.weight }}" onChange="{{ ex.setWeight }}" placeholder="60" inputmode="decimal" style="border:2px solid #eee9dc;border-radius:4px;background:transparent;font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:#1a1815;padding:9px 10px;width:100%;box-sizing:border-box;transition:border-color .25s ease">
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <div onClick="{{ openPicker }}" style="margin-top:16px;font-size:11px;letter-spacing:.12em;font-weight:800;color:#B3121A;cursor:pointer;align-self:flex-start">+ Afegir exercici</div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showPicker }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;left:0;right:0;top:46px;bottom:0;background:#fff;display:flex;flex-direction:column;z-index:30;animation:sheetIn .32s cubic-bezier(.22,.8,.28,1) both">
+    <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:16px 22px 14px;border-bottom:1px solid #eee9dc">
+      <div onClick="{{ closePicker }}" style="flex:1;font-size:11px;letter-spacing:.12em;font-weight:700;color:#a29c8c;cursor:pointer">Cancel·la</div>
+      <div style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.06em">Exercicis</div>
+      <div onClick="{{ confirmPicker }}" style="flex:1;text-align:right;font-size:11px;letter-spacing:.12em;font-weight:800;color:#B3121A;cursor:pointer">{{ pickerAction }}</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:8px 22px 40px">
+      <sc-for list="{{ library }}" as="grp" hint-placeholder-count="6">
+        <div style="padding-top:22px">
+          <div style="display:flex;align-items:center;gap:9px;padding-bottom:8px">
+            <span style="{{ grp.dot }}"></span>
+            <span style="font-size:10.5px;letter-spacing:.16em;font-weight:800;color:#8a8373">{{ grp.name }}</span>
+          </div>
+          <sc-for list="{{ grp.items }}" as="it" hint-placeholder-count="3">
+            <div onClick="{{ it.toggle }}" style="display:flex;align-items:center;gap:13px;border-bottom:1px solid #f2eee2;padding:12px 0;cursor:pointer">
+              <span style="{{ it.box }}">{{ it.tick }}</span>
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
+                <span style="{{ it.nameStyle }}">{{ it.name }}</span>
+                <span style="font-size:11px;color:#b5afa0">{{ it.subs }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showEditor }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;animation:sheetIn .4s cubic-bezier(.22,.8,.28,1) both">
+
+    <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:58px 22px 14px;border-bottom:1px solid #eee9dc">
+      <div onClick="{{ cancel }}" style="font-size:11px;letter-spacing:.12em;font-weight:700;color:#a29c8c;cursor:pointer">Cancel·la</div>
+      <div style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.06em">{{ editorTitle }}</div>
+      <div onClick="{{ save }}" style="font-size:11px;letter-spacing:.12em;font-weight:800;color:#B3121A;cursor:pointer">Guarda</div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:24px 22px 40px;display:flex;flex-direction:column;gap:26px">
+
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Nom</label>
+        <input value="{{ draftName }}" onChange="{{ setName }}" placeholder="Setmana d'exàmens" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:26px;font-weight:600;color:#1a1815;padding:0 0 8px;transition:border-color .25s ease">
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Color</label>
+        <div style="display:flex;gap:12px">
+          <sc-for list="{{ colorOpts }}" as="c" hint-placeholder-count="6">
+            <div onClick="{{ c.pick }}" style="{{ c.style }}"></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Prioritat d'estudi</label>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ prioOpts }}" as="p" hint-placeholder-count="4">
+            <div onClick="{{ p.pick }}" style="{{ p.style }}">{{ p.label }}</div>
+          </sc-for>
+        </div>
+        <div style="font-size:11.5px;color:#a29c8c">{{ prioHint }}</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373;margin-bottom:10px">Tasques</label>
+        <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:11px;border-bottom:1px solid #f2eee2">
+            <span style="width:5px;height:5px;border-radius:50%;background:#d2ccbb;display:block;flex-shrink:0"></span>
+            <div onClick="{{ t.open }}" style="flex:1;display:flex;align-items:center;gap:8px;padding:12px 0;cursor:pointer">
+              <span style="flex:1;font-size:14.5px;color:#1a1815">{{ t.value }}</span>
+              <sc-if value="{{ t.hasDetails }}" hint-placeholder-val="{{ false }}">
+                <span style="width:4px;height:4px;border-radius:50%;background:#B3121A;display:block;flex-shrink:0"></span>
+              </sc-if>
+              <span style="width:8px;height:8px;border-right:2px solid #d2ccbb;border-top:2px solid #d2ccbb;transform:rotate(45deg);display:block;flex-shrink:0"></span>
+            </div>
+            <div onClick="{{ t.remove }}" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:#c9c3b4;font-size:18px;cursor:pointer;flex-shrink:0;transition:color .2s ease" style-hover="color:#B3121A">×</div>
+          </div>
+        </sc-for>
+        <div onClick="{{ addTask }}" style="margin-top:14px;font-size:11px;letter-spacing:.12em;font-weight:800;color:#B3121A;cursor:pointer;align-self:flex-start">+ Afegir tasca</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Esport</label>
+        <sc-for list="{{ sportGroups }}" as="g" hint-placeholder-count="3">
+          <div style="border:2px solid #eee9dc;border-radius:6px;padding:13px 14px 11px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;letter-spacing:.02em">{{ g.label }}</span>
+              <span style="font-size:11px;color:#c1bbab;font-weight:600">{{ g.count }}</span>
+            </div>
+            <sc-for list="{{ g.days }}" as="d" hint-placeholder-count="1">
+              <div style="border-top:2px solid #e6e0cf;margin-top:14px;padding-top:9px;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div onClick="{{ d.open }}" style="flex:1;display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer">
+                    <span style="flex:1;font-family:'Oswald',sans-serif;font-size:15.5px;font-weight:500;color:#1a1815">{{ d.title }}</span>
+                    <span style="width:8px;height:8px;border-right:2px solid #d2ccbb;border-top:2px solid #d2ccbb;transform:rotate(45deg);display:block;flex-shrink:0"></span>
+                  </div>
+                  <div onClick="{{ d.remove }}" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:#c9c3b4;font-size:17px;cursor:pointer;flex-shrink:0;transition:color .2s ease" style-hover="color:#B3121A">×</div>
+                </div>
+                <sc-if value="{{ d.hasText }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size:13.5px;line-height:1.55;color:#6b6558;padding:0 0 7px;white-space:pre-wrap">{{ d.text }}</div>
+                </sc-if>
+                <sc-if value="{{ d.isGym }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:11.5px;color:#c9c3b4;padding:0 0 8px">{{ d.gymSummary }}</div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <div onClick="{{ g.add }}" style="border-top:1px solid #f2eee2;margin-top:14px;padding-top:12px;font-size:11px;letter-spacing:.12em;font-weight:800;color:#B3121A;cursor:pointer">+ Afegir dia</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ canDelete }}" hint-placeholder-val="{{ false }}">
+        <div style="border-top:1px solid #eee9dc;padding-top:22px;margin-top:4px">
+          <sc-if value="{{ confirmOff }}" hint-placeholder-val="{{ true }}">
+            <div onClick="{{ askDelete }}" style="font-size:11px;letter-spacing:.12em;font-weight:700;color:#a29c8c;cursor:pointer;transition:color .25s ease" style-hover="color:#B3121A">Suprimeix aquest sistema</div>
+          </sc-if>
+          <sc-if value="{{ confirmOn }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:14px;animation:secIn .3s ease both">
+              <div style="font-size:13px;line-height:1.5;color:#1a1815;text-wrap:pretty">Se suprimirà aquest sistema. Aquesta acció no es pot desfer.</div>
+              <div style="display:flex;gap:10px">
+                <div onClick="{{ doDelete }}" style="flex:1;text-align:center;background:#B3121A;color:#fff;border-radius:999px;padding:13px;font-size:11px;letter-spacing:.12em;font-weight:800;cursor:pointer">Suprimeix</div>
+                <div onClick="{{ cancelDelete }}" style="flex:1;text-align:center;border:2px solid #eee9dc;border-radius:999px;padding:11px;font-size:11px;letter-spacing:.12em;font-weight:700;color:#8a8373;cursor:pointer">Conserva</div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const PALETTE = ["#C42727", "#DB6300", "#FFD400", "#6EE23C", "#2448B2", "#111111"];
+const PRIO_HINTS = [
+  "0 · Cap càrrega d'estudi aquesta setmana.",
+  "1 · Càrrega lleugera.",
+  "2 · Càrrega alta, l'estudi manda.",
+  "3 · Màxima prioritat, tot gira al voltant de l'estudi."
+];
+
+const LIBRARY = [
+  ["Pit", "#C42727", [
+    ["Press banca", ["Pectoral mig", "Pectoral baix"]],
+    ["Press inclinat", ["Pectoral alt", "Deltoide anterior"]],
+    ["Peck deck", ["Pectoral mig"]]
+  ]],
+  ["Esquena", "#2448B2", [
+    ["Dominades", ["Dorsals", "Esquena alta"]],
+    ["Rem", ["Esquena alta", "Dorsals"]]
+  ]],
+  ["Hombros", "#DB6300", [
+    ["Reverse peck deck", ["Deltoide posterior"]],
+    ["Laterals en politja", ["Deltoide lateral"]],
+    ["Press d'espatlla", ["Deltoide anterior", "Deltoide lateral"]]
+  ]],
+  ["Tríceps", "#FFD400", [
+    ["Extensió de tríceps", ["Cap lateral", "Cap medial"]],
+    ["Press francès en politja", ["Cap llarg"]]
+  ]],
+  ["Bíceps", "#111111", [
+    ["Curl predicador", ["Bíceps"]]
+  ]],
+  ["Cames", "#6EE23C", [
+    ["Squat", ["Quàdriceps", "Glutis"]],
+    ["Extensió de bessons", ["Bessons"]],
+    ["Extensió de quàdriceps", ["Quàdriceps"]],
+    ["Extensió d'isquio", ["Isquiotibials"]],
+    ["Màquina adductors", ["Adductors"]],
+    ["Màquina abductors", ["Abductors"]]
+  ]]
+];
+const normEx = e => typeof e === "string"
+  ? { name: e, sets: "", reps: "", weight: "" }
+  : { name: e.name, sets: e.sets || "", reps: e.reps || "", weight: e.weight || "" };
+const EX_INDEX = {};
+LIBRARY.forEach(([group, color, items]) => items.forEach(([name, subs]) => {
+  EX_INDEX[name] = { name, group, color, subs };
+}));
+
+const MONTHS_SHORT = ["Gen", "Feb", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Des"];
+const MONTHS_LONG = ["gener", "febrer", "març", "abril", "maig", "juny", "juliol", "agost", "setembre", "octubre", "novembre", "desembre"];
+const monthOf = i => ("aeiou".indexOf(MONTHS_LONG[i][0]) >= 0 ? "d'" : "de ") + MONTHS_LONG[i];
+const LIGHT_ON = ["#FFD400", "#6EE23C"];
+const NOW_INK = "#1a1815";
+
+const isoWeekOf = date => {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const day = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - day);
+  const y = d.getUTCFullYear();
+  const jan1 = new Date(Date.UTC(y, 0, 1));
+  return { year: y, week: Math.ceil(((d - jan1) / 86400000 + 1) / 7) };
+};
+const isoMonday = (y, w) => {
+  const s = new Date(Date.UTC(y, 0, 4));
+  const day = s.getUTCDay() || 7;
+  s.setUTCDate(s.getUTCDate() - day + 1 + (w - 1) * 7);
+  return s;
+};
+const isoWeeksIn = y => isoWeekOf(new Date(y, 11, 28)).week;
+const rangeLabel = (y, w) => {
+  const a = isoMonday(y, w);
+  const b = new Date(a.getTime() + 6 * 86400000);
+  const ma = a.getUTCMonth(), mb = b.getUTCMonth();
+  return ma === mb
+    ? a.getUTCDate() + " – " + b.getUTCDate() + " " + monthOf(mb)
+    : a.getUTCDate() + " " + monthOf(ma) + " – " + b.getUTCDate() + " " + monthOf(mb);
+};
+const wkey = (y, w) => y + "-W" + (w < 10 ? "0" + w : w);
+
+const todayISO = () => {
+  const d = new Date();
+  const p = n => (n < 10 ? "0" : "") + n;
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+};
+const PATH_W = 302, NODE_TOP = 34, NODE_AMP = 26;
+
+const MANTRAS = ["I'M A FAN OF MYSELF", "I'M GOATED", "I BELIVE", "I WILL ENJOY IT"];
+const GROUPS = [["gym", "Gym"], ["cardio", "Cardio"], ["abs", "Abs"]];
+let uid = 100;
+const nid = () => ++uid;
+const emptyDraft = () => ({ name: "", color: PALETTE[0], prio: 1, tasks: [], sport: { gym: [], cardio: [], abs: [] } });
+
+class Component extends DCLogic {
+  state = {
+    active: 4,
+    screen: "main",
+    editingId: null,
+    confirm: false,
+    draft: null,
+    sheet: null,
+    picker: null,
+    systems: [],
+    actualView: "week",
+    year: isoWeekOf(new Date()).year,
+    weekOpen: null,
+    collapsed: {},
+    assign: {},
+    books: [],
+    bookForm: null,
+    bookOpen: null,
+    bookDel: false
+  };
+
+  newBook() {
+    this.setState({ bookForm: {
+      title: "", status: "reading", date: todayISO(),
+      hint: MANTRAS[Math.floor(Math.random() * MANTRAS.length)]
+    } });
+  }
+  patchBook(k, v) { this.setState(st => ({ bookForm: { ...st.bookForm, [k]: v } })); }
+  saveBook() {
+    const f = this.state.bookForm;
+    const title = (f.title || "").trim() || "Sense títol";
+    this.setState(st => {
+      let books = st.books;
+      if (f.status === "reading") books = books.map(b => b.status === "reading" ? { ...b, status: "read", finishedAt: todayISO() } : b);
+      const id = Math.max(0, ...books.map(b => b.id)) + 1;
+      return { books: [...books, { id, title, status: f.status, finishedAt: f.status === "read" ? f.date : null }], bookForm: null };
+    });
+  }
+  finishBook(id) {
+    this.setState(st => ({ books: st.books.map(b => b.id === id ? { ...b, status: "read", finishedAt: todayISO() } : b), bookOpen: null }));
+  }
+  removeBook(id) {
+    this.setState(st => ({ books: st.books.filter(b => b.id !== id), bookOpen: null, bookDel: false }));
+  }
+
+  toggleDone(y, w, itemId) {
+    this.setState(st => {
+      const k = wkey(y, w), e = st.assign[k];
+      if (!e) return null;
+      const done = e.done || [];
+      const next = done.indexOf(itemId) >= 0 ? done.filter(x => x !== itemId) : [...done, itemId];
+      return { assign: { ...st.assign, [k]: { ...e, done: next } } };
+    });
+  }
+
+  assignWeek(y, w, id) {
+    this.setState(st => {
+      const a = { ...st.assign };
+      if (id == null) delete a[wkey(y, w)]; else a[wkey(y, w)] = { systemId: id };
+      return { assign: a, weekOpen: null };
+    });
+  }
+
+  componentDidMount() {
+    try {
+      const raw = localStorage.getItem("panell-salut:systems");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (Array.isArray(saved) && saved.length) {
+          saved.forEach(s => { if (s.id > uid) uid = s.id; });
+          this.setState({ systems: saved });
+        }
+      }
+      const rawB = localStorage.getItem("panell-salut:books");
+      if (rawB) {
+        const b = JSON.parse(rawB);
+        if (Array.isArray(b)) this.setState({ books: b });
+      }
+      const rawA = localStorage.getItem("panell-salut:assign");
+      if (rawA) {
+        const a = JSON.parse(rawA);
+        if (a && typeof a === "object") this.setState({ assign: a });
+      }
+    } catch (e) {}
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState) return;
+    if (prevState.systems !== this.state.systems) {
+      try { localStorage.setItem("panell-salut:systems", JSON.stringify(this.state.systems)); } catch (e) {}
+    }
+    if (prevState.books !== this.state.books) {
+      try { localStorage.setItem("panell-salut:books", JSON.stringify(this.state.books)); } catch (e) {}
+    }
+    if (prevState.assign !== this.state.assign) {
+      try { localStorage.setItem("panell-salut:assign", JSON.stringify(this.state.assign)); } catch (e) {}
+    }
+  }
+
+  openNew() {
+    this.setState({ screen: "editor", editingId: null, confirm: false,
+      draft: emptyDraft() });
+  }
+  openSystem(s) {
+    this.setState({ screen: "editor", editingId: s.id, confirm: false,
+      draft: { ...s, tasks: s.tasks.map(t => ({ ...t })), sport: {
+        gym: s.sport.gym.map(x => ({ ...x })),
+        cardio: s.sport.cardio.map(x => ({ ...x })),
+        abs: s.sport.abs.map(x => ({ ...x }))
+      } } });
+  }
+  removeTask(id) { this.setState(st => ({ draft: { ...st.draft, tasks: st.draft.tasks.filter(t => t.id !== id) } })); }
+
+  openSheet(kind, group, item) {
+    this.setState({ sheet: {
+      kind, group,
+      hint: MANTRAS[Math.floor(Math.random() * MANTRAS.length)],
+      id: item ? item.id : null,
+      name: item ? (kind === "task" ? item.text : item.title) : "",
+      details: item ? (item.details || item.text2 || (kind === "day" ? item.text : item.details) || "") : "",
+      exercises: item && Array.isArray(item.exercises) ? item.exercises.map(normEx) : [],
+      openEx: null
+    }, picker: null });
+  }
+  removeExercise(i) {
+    this.setState(st => ({ sheet: { ...st.sheet, exercises: st.sheet.exercises.filter((_, k) => k !== i), openEx: null } }));
+  }
+  toggleEx(i) { this.setState(st => ({ sheet: { ...st.sheet, openEx: st.sheet.openEx === i ? null : i } })); }
+  editEx(i, field, v) {
+    this.setState(st => ({ sheet: { ...st.sheet, exercises: st.sheet.exercises.map((e, k) => k === i ? { ...e, [field]: v } : e) } }));
+  }
+  togglePick(name) {
+    this.setState(st => {
+      const sel = st.picker.sel;
+      return { picker: { sel: sel.includes(name) ? sel.filter(n => n !== name) : [...sel, name] } };
+    });
+  }
+  confirmPicker() {
+    this.setState(st => ({
+      sheet: { ...st.sheet, exercises: [...st.sheet.exercises, ...st.picker.sel.map(normEx)] },
+      picker: null
+    }));
+  }
+  setSheet(k, v) { this.setState(st => ({ sheet: { ...st.sheet, [k]: v } })); }
+  closeSheet() { this.setState({ sheet: null, picker: null }); }
+  commitSheet() {
+    const sh = this.state.sheet;
+    const name = (sh.name || "").trim();
+    if (!name) { this.closeSheet(); return; }
+    this.setState(st => {
+      const d = st.draft;
+      if (sh.kind === "task") {
+        const tasks = sh.id == null
+          ? [...d.tasks, { id: nid(), text: name, details: sh.details }]
+          : d.tasks.map(t => t.id === sh.id ? { ...t, text: name, details: sh.details } : t);
+        return { draft: { ...d, tasks }, sheet: null };
+      }
+      const key = sh.group;
+      const list = d.sport[key] || [];
+      const days = sh.id == null
+        ? [...list, key === "gym" ? { id: nid(), title: name, exercises: sh.exercises } : { id: nid(), title: name, text: sh.details }]
+        : list.map(x => x.id === sh.id ? (key === "gym" ? { ...x, title: name, exercises: sh.exercises } : { ...x, title: name, text: sh.details }) : x);
+      return { draft: { ...d, sport: { ...d.sport, [key]: days } }, sheet: null, picker: null };
+    });
+  }
+  removeDay(key, id) {
+    this.setState(st => ({ draft: { ...st.draft, sport: { ...st.draft.sport,
+      [key]: st.draft.sport[key].filter(d => d.id !== id) } } }));
+  }
+  patch(k, v) { this.setState(st => ({ draft: { ...st.draft, [k]: v } })); }
+  close() { this.setState({ screen: "main", editingId: null, confirm: false, draft: null, sheet: null }); }
+  saveDraft() {
+    const d = this.state.draft;
+    const name = (d.name || "").trim() || "Sistema sense nom";
+    this.setState(st => {
+      if (st.editingId == null) {
+        const id = Math.max(0, ...st.systems.map(s => s.id)) + 1;
+        return { systems: [...st.systems, { ...d, name, id }], screen: "main", editingId: null, draft: null, confirm: false };
+      }
+      return { systems: st.systems.map(s => s.id === st.editingId ? { ...d, name } : s), screen: "main", editingId: null, draft: null, confirm: false };
+    });
+  }
+  removeDraft() {
+    this.setState(st => {
+      const a = {};
+      Object.keys(st.assign).forEach(k => { if (st.assign[k].systemId !== st.editingId) a[k] = st.assign[k]; });
+      return { systems: st.systems.filter(s => s.id !== st.editingId), assign: a, screen: "main", editingId: null, draft: null, confirm: false };
+    });
+  }
+
+  renderVals() {
+    const names = ["Actual", "Esport", "Misions", "Llibres", "Sistemes"];
+    const st = this.state;
+    const onEditor = st.screen === "editor";
+    const d = st.draft || emptyDraft();
+    const sh = st.sheet;
+    const pk = st.picker;
+
+    const now = isoWeekOf(new Date());
+    const sysById = id => st.systems.find(s => s.id === id) || null;
+    const sysFor = (y, w) => { const a = st.assign[wkey(y, w)]; return a ? sysById(a.systemId) : null; };
+    const summaryOf = s => {
+      const t = s.tasks.length, sp = s.sport.gym.length + s.sport.cardio.length + s.sport.abs.length;
+      return [t + (t === 1 ? " tasca" : " tasques"), sp + (sp === 1 ? " dia d'esport" : " dies d'esport")].join(" · ");
+    };
+    const cur = sysFor(now.year, now.week);
+    const curEntry = st.assign[wkey(now.year, now.week)];
+    const doneList = (curEntry && curEntry.done) || [];
+    const isDone = id => doneList.indexOf(id) >= 0;
+    const boxStyle = (on, color) => `width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;`
+      + `flex-shrink:0;cursor:pointer;font-size:12px;font-weight:800;color:#fff;`
+      + `border:2px solid ${on ? color : "#e6e0cf"};background:${on ? color : "transparent"};`
+      + `transition:all .25s cubic-bezier(.22,.8,.28,1)`;
+    const tIds = cur ? cur.tasks.map(t => t.id) : [];
+    const sIds = cur ? GROUPS.reduce((a, [k]) => a.concat(cur.sport[k].map(d => d.id)), []) : [];
+    const tDone = tIds.filter(isDone).length;
+    const sDone = sIds.filter(isDone).length;
+    const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+    const fillStyle = (p, color) => `display:block;height:100%;width:${p}%;background:${color};border-radius:999px;transition:width .4s cubic-bezier(.22,.8,.28,1)`;
+    const chevron = open => `width:8px;height:8px;display:block;flex-shrink:0;`
+      + `border-right:2px solid #c1bbab;border-bottom:2px solid #c1bbab;`
+      + `transform:rotate(${open ? "-135deg" : "45deg"});margin-top:${open ? "3px" : "-3px"};`
+      + `transition:transform .3s cubic-bezier(.22,.8,.28,1)`;
+
+    const nWeeks = isoWeeksIn(st.year);
+    const buckets = MONTHS_SHORT.map(() => []);
+    for (let w = 1; w <= nWeeks; w++) {
+      const thu = new Date(isoMonday(st.year, w).getTime() + 3 * 86400000);
+      buckets[thu.getUTCMonth()].push(w);
+    }
+    const wo = st.weekOpen;
+    const woSys = wo ? sysFor(wo.year, wo.week) : null;
+    const woPast = !!wo && (wo.year < now.year || (wo.year === now.year && wo.week < now.week));
+
+    const bf = st.bookForm, bo = st.bookOpen ? st.books.find(b => b.id === st.bookOpen) : null;
+    const readBooks = st.books.filter(b => b.status === "read")
+      .sort((a, b) => String(a.finishedAt || "").localeCompare(String(b.finishedAt || "")));
+    const reading = st.books.find(b => b.status === "reading") || null;
+    const ordered = reading ? [...readBooks, reading] : readBooks;
+
+    const cx = PATH_W / 2;
+    const pts = ordered.map((b, i) => ({
+      x: cx + NODE_AMP * Math.sin(i * 0.9 + 0.4),
+      y: NODE_TOP + (i === 0 ? 0 : 0)
+    }));
+    let y = NODE_TOP;
+    pts.forEach((p, i) => { if (i) y += 88 + ((i * 37) % 33); p.y = y; });
+    const pathH = ordered.length ? y + (reading ? 96 : 46) : 1;
+
+    const seg = (a, b) => `C ${a.x} ${a.y + (b.y - a.y) * 0.45}, ${b.x} ${b.y - (b.y - a.y) * 0.45}, ${b.x} ${b.y}`;
+    let pathD = "", tailD = "";
+    if (pts.length) {
+      pathD = `M ${pts[0].x} ${pts[0].y}`;
+      for (let i = 1; i < pts.length; i++) pathD += " " + seg(pts[i - 1], pts[i]);
+      const last = pts[pts.length - 1];
+      if (reading) tailD = `M ${last.x} ${last.y} C ${last.x} ${last.y + 26}, ${cx} ${last.y + 40}, ${cx - 6} ${last.y + 62}`;
+    }
+
+    const nodes = ordered.map((b, i) => {
+      const p = pts[i], isNow = b.status === "reading";
+      const yr = (b.finishedAt || "").slice(0, 4);
+      const prevYr = i ? (ordered[i - 1].finishedAt || "").slice(0, 4) : "";
+      const right = p.x <= cx;
+      const size = isNow ? 15 : 11;
+      return {
+        title: b.title,
+        open: () => this.setState({ bookOpen: b.id, bookDel: false }),
+        wrap: `position:absolute;left:0;top:0;width:${PATH_W}px;height:0`,
+        row: `position:absolute;top:${p.y}px;${right ? "left:" + p.x + "px" : "right:" + (PATH_W - p.x) + "px"};`
+          + `transform:translateY(-50%);display:flex;align-items:center;gap:13px;cursor:pointer;`
+          + `flex-direction:${right ? "row" : "row-reverse"};max-width:${right ? PATH_W - p.x - 6 : p.x - 6}px;`
+          + `margin-${right ? "left" : "right"}:-${size / 2}px;transition:opacity .25s ease`,
+        dot: `width:${size}px;height:${size}px;border-radius:50%;display:block;flex-shrink:0;box-sizing:border-box;`
+          + (isNow ? "background:#fff;border:2.5px solid #B3121A" : "background:#1a1815"),
+        titleStyle: `font-family:'Oswald',sans-serif;font-size:${isNow ? 20 : 17}px;font-weight:${isNow ? 600 : 500};`
+          + `color:#1a1815;line-height:1.2;text-align:${right ? "left" : "right"};text-wrap:pretty`,
+        showYear: !isNow && !!yr && yr !== prevYr,
+        year: yr,
+        yearStyle: `position:absolute;top:${p.y - 26}px;${right ? "left:" + (p.x - 4) + "px" : "right:" + (PATH_W - p.x - 4) + "px"};`
+          + `font-size:10px;letter-spacing:.16em;font-weight:800;color:#c1bbab`
+      };
+    });
+
+    return {
+      title: names[st.active],
+      onSistemes: st.active === 4,
+      onActual: st.active === 0,
+
+      actualViews: [["week", "Aquesta setmana"], ["progres", "Progrés"]].map(([k, label]) => {
+        const on = st.actualView === k;
+        return {
+          label,
+          go: () => this.setState({ actualView: k }),
+          style: `font-size:11px;letter-spacing:.1em;font-weight:800;cursor:pointer;padding-bottom:5px;border-bottom:2px solid ${on ? "#B3121A" : "transparent"};color:${on ? "#1a1815" : "#a29c8c"};transition:all .3s cubic-bezier(.22,.8,.28,1)`
+        };
+      }),
+      viewWeek: st.active === 0 && st.actualView === "week",
+      viewProgres: st.active === 0 && st.actualView === "progres",
+
+      curWeekNum: String(now.week),
+      curNone: !cur,
+      curHas: !!cur,
+      curName: cur ? cur.name : "",
+      curRange: "Setmana " + now.week + " · " + rangeLabel(now.year, now.week),
+      curDot: `width:13px;height:13px;border-radius:50%;background:${cur ? cur.color : "#d2ccbb"};display:block;flex-shrink:0`,
+      curHasTasks: !!cur && cur.tasks.length > 0,
+      curTasks: cur ? cur.tasks.map(t => ({
+        text: t.text,
+        hasDetails: !!(t.details || "").trim(),
+        done: isDone(t.id),
+        toggle: () => this.toggleDone(now.year, now.week, t.id),
+        box: boxStyle(isDone(t.id), cur.color),
+        tick: isDone(t.id) ? "✓" : "",
+        textStyle: `flex:1;font-size:14.5px;color:${isDone(t.id) ? "#b5afa0" : "#1a1815"};text-decoration:${isDone(t.id) ? "line-through" : "none"};transition:all .25s ease`
+      })) : [],
+      tasksProgress: tDone + " / " + tIds.length,
+      sportProgress: sDone + " / " + sIds.length,
+      tasksOpen: !st.collapsed.tasks,
+      sportOpen: !st.collapsed.sport,
+      tasksShut: !!st.collapsed.tasks,
+      sportShut: !!st.collapsed.sport,
+      tasksPct: pct(tDone, tIds.length) + "%",
+      sportPct: pct(sDone, sIds.length) + "%",
+      tasksFill: fillStyle(pct(tDone, tIds.length), cur ? cur.color : "#d2ccbb"),
+      sportFill: fillStyle(pct(sDone, sIds.length), cur ? cur.color : "#d2ccbb"),
+      toggleTasks: () => this.setState(s => ({ collapsed: { ...s.collapsed, tasks: !s.collapsed.tasks } })),
+      toggleSport: () => this.setState(s => ({ collapsed: { ...s.collapsed, sport: !s.collapsed.sport } })),
+      tasksChevron: chevron(!st.collapsed.tasks),
+      sportChevron: chevron(!st.collapsed.sport),
+      curHasSport: !!cur && GROUPS.some(([k]) => cur.sport[k].length),
+      curSport: cur ? GROUPS.filter(([k]) => cur.sport[k].length).map(([k, label]) => ({
+        label,
+        count: String(cur.sport[k].length),
+        style: `border:2px solid #eee9dc;border-radius:6px;padding:12px 13px 11px;box-sizing:border-box;min-width:0;`
+          + (k === "abs" ? "flex:1 1 100%" : "flex:1 1 calc(50% - 6px)"),
+        days: cur.sport[k].map(day => ({
+          title: day.title,
+          text: day.text || "",
+          hasText: k !== "gym" && !!(day.text || "").trim(),
+          done: isDone(day.id),
+          toggle: () => this.toggleDone(now.year, now.week, day.id),
+          box: `width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;font-size:10.5px;font-weight:800;color:#fff;border:2px solid ${isDone(day.id) ? cur.color : "#e6e0cf"};background:${isDone(day.id) ? cur.color : "transparent"};transition:all .25s cubic-bezier(.22,.8,.28,1)`,
+          tick: isDone(day.id) ? "✓" : "",
+          titleStyle: `flex:1;min-width:0;font-family:'Oswald',sans-serif;font-size:14.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:${isDone(day.id) ? "#b5afa0" : "#1a1815"};text-decoration:${isDone(day.id) ? "line-through" : "none"};transition:all .25s ease`,
+          bodyStyle: `display:flex;flex-direction:column;gap:4px;padding-left:31px;opacity:${isDone(day.id) ? .4 : 1};transition:opacity .25s ease`,
+          exercises: k === "gym" ? (day.exercises || []).map(normEx).map(ex => {
+            const e = EX_INDEX[ex.name] || { color: "#d2ccbb" };
+            return {
+              name: ex.name,
+              vol: (ex.sets || ex.reps) ? "(" + (ex.sets || "–") + " × " + (ex.reps || "–") + ")" : "",
+              kg: ex.weight ? ex.weight + " kg" : "",
+              bar: `width:4px;height:16px;border-radius:2px;background:${e.color};display:block;flex-shrink:0`
+            };
+          }) : []
+        }))
+      })) : [],
+      openCurWeek: () => this.setState({ actualView: "progres", year: now.year, weekOpen: { year: now.year, week: now.week } }),
+
+      year: String(st.year),
+      prevYear: () => this.setState({ year: st.year - 1 }),
+      nextYear: () => this.setState({ year: st.year + 1 }),
+      statusLine: "Setmana " + now.week + " · " + (cur ? cur.name : "sense sistema"),
+      months: buckets.map((weeks, mi) => ({
+        label: MONTHS_SHORT[mi],
+        weeks: weeks.map(w => {
+          const s = sysFor(st.year, w);
+          const isNow = st.year === now.year && w === now.week;
+          const past = st.year < now.year || (st.year === now.year && w < now.week);
+          const fg = s ? (LIGHT_ON.indexOf(s.color) >= 0 ? "#1a1815" : "#fff") : "#c1bbab";
+          return {
+            num: String(w),
+            tap: () => this.setState({ weekOpen: { year: st.year, week: w } }),
+            style: `aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;`
+              + `font-family:'Oswald',sans-serif;font-size:12.5px;font-weight:500;`
+              + `border-radius:34% 66% 60% 40% / 55% 45% 55% 45%;`
+              + `background:${s ? s.color : "#fff"};color:${fg};`
+              + `opacity:${past && !isNow ? .42 : 1};`
+              + `border:2px solid ${s ? "transparent" : "#eee9dc"};`
+              + `box-shadow:${isNow ? "0 0 0 2px #fff, 0 0 0 4px " + NOW_INK : "none"};`
+              + `transition:all .3s cubic-bezier(.22,.8,.28,1)`
+          };
+        })
+      })),
+      hasLegend: st.systems.length > 0,
+      legend: st.systems.map(s => ({
+        name: s.name,
+        dot: `width:9px;height:9px;border-radius:50%;background:${s.color};display:block;flex-shrink:0`
+      })),
+
+      showWeek: !!wo,
+      weekTitle: wo ? "Setmana " + wo.week : "",
+      weekRange: wo ? rangeLabel(wo.year, wo.week) + " · " + wo.year : "",
+      closeWeek: () => this.setState({ weekOpen: null }),
+      noSystems: !!wo && !woPast && st.systems.length === 0,
+      weekPastSys: woPast && !!woSys,
+      weekPastEmpty: woPast && !woSys,
+      weekDot: `width:13px;height:13px;border-radius:50%;background:${woSys ? woSys.color : "#d2ccbb"};display:block;flex-shrink:0`,
+      weekSysName: woSys ? woSys.name : "",
+      weekAssigned: !!woSys,
+      weekStats: woSys ? (() => {
+        const e = st.assign[wkey(wo.year, wo.week)] || {};
+        const dn = e.done || [];
+        const sp = GROUPS.reduce((a, [k]) => a.concat(woSys.sport[k].map(d => d.id)), []);
+        const tk = woSys.tasks.map(t => t.id);
+        return [["Esport", sp], ["Tasques", tk]].map(([label, ids]) => {
+          const p = pct(ids.filter(i => dn.indexOf(i) >= 0).length, ids.length);
+          return { label, pct: p + "%", fill: fillStyle(p, woSys.color) };
+        });
+      })() : [],
+      clearWeek: () => this.assignWeek(wo.year, wo.week, null),
+      weekOptions: wo && !woPast ? st.systems.map(s => {
+        const on = !!woSys && woSys.id === s.id;
+        return {
+          name: s.name,
+          summary: summaryOf(s),
+          pick: () => { if (!on) this.assignWeek(wo.year, wo.week, s.id); },
+          dot: `width:13px;height:13px;border-radius:50%;background:${s.color};display:block;flex-shrink:0;opacity:${on ? 1 : .5};transition:opacity .25s ease`,
+          nameStyle: `font-family:'Oswald',sans-serif;font-size:18px;font-weight:${on ? 600 : 500};color:${on ? "#1a1815" : "#4a453c"}`,
+          mark: on ? "✓" : "",
+          markStyle: `width:20px;text-align:right;font-size:13px;font-weight:800;color:#B3121A;flex-shrink:0`
+        };
+      }) : [],
+
+      onLlibres: st.active === 3,
+      readCount: String(readBooks.length),
+      readLabel: readBooks.length === 1 ? "llibre llegit" : "llibres llegits",
+      hasReading: !!reading,
+      readingTitle: reading ? reading.title : "",
+      goToReading: () => { const el = this.pathEl; if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }); },
+      booksEmpty: ordered.length === 0,
+      pathRef: el => {
+        this.pathEl = el;
+        if (el && !this._scrolled) { this._scrolled = true; requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; }); }
+        if (!el) this._scrolled = false;
+      },
+      pathBox: `position:relative;width:${PATH_W}px;height:${pathH}px;margin:0 auto`,
+      pathView: `0 0 ${PATH_W} ${pathH}`,
+      pathSvg: `position:absolute;top:0;left:0;width:${PATH_W}px;height:${pathH}px;display:block;overflow:visible`,
+      pathD: pathD,
+      tailD: tailD,
+      bookNodes: nodes,
+
+      showBookForm: !!bf,
+      bookTitle: bf ? bf.title : "",
+      bookHint: bf ? bf.hint : "",
+      bookDate: bf ? bf.date : "",
+      bookIsRead: !!bf && bf.status === "read",
+      setBookTitle: e => this.patchBook("title", e.target.value),
+      setBookDate: e => this.patchBook("date", e.target.value),
+      cancelBook: () => this.setState({ bookForm: null }),
+      saveBook: () => this.saveBook(),
+      newBook: () => this.newBook(),
+      bookStates: [["reading", "Llegint"], ["read", "Llegit"]].map(([k, label]) => {
+        const on = !!bf && bf.status === k;
+        return {
+          label,
+          pick: () => this.patchBook("status", k),
+          style: `flex:1;text-align:center;border:2px solid ${on ? "#1a1815" : "#eee9dc"};border-radius:999px;padding:11px 0;`
+            + `font-family:'Oswald',sans-serif;font-size:15px;font-weight:${on ? 600 : 500};`
+            + `color:${on ? "#1a1815" : "#a29c8c"};cursor:pointer;transition:all .25s cubic-bezier(.22,.8,.28,1)`
+        };
+      }),
+
+      showBookCard: !!bo,
+      cardTitle: bo ? bo.title : "",
+      cardMeta: bo ? (bo.status === "reading" ? "Llegint ara" : (bo.finishedAt || "").slice(0, 4)) : "",
+      cardIsReading: !!bo && bo.status === "reading",
+      closeBook: () => this.setState({ bookOpen: null, bookDel: false }),
+      finishBook: () => this.finishBook(bo.id),
+      removeBook: () => st.bookDel ? this.removeBook(bo.id) : this.setState({ bookDel: true }),
+      cardDelLabel: st.bookDel ? "Confirma que el vols treure" : "Treu del camí",
+      cardDelStyle: `font-size:11px;letter-spacing:.12em;font-weight:700;cursor:pointer;align-self:flex-start;transition:color .25s ease;color:${st.bookDel ? "#B3121A" : "#a29c8c"}`,
+
+      showMain: !onEditor && !st.bookForm,
+      showEditor: onEditor,
+      isEmpty: st.systems.length === 0,
+      newSystem: () => this.openNew(),
+
+      systems: st.systems.map(s => ({
+        name: s.name,
+        open: () => this.openSystem(s),
+        dot: `width:13px;height:13px;border-radius:50%;background:${s.color};display:block;flex-shrink:0`,
+        pips: [0, 1, 2].map(i => ({
+          style: `width:4px;height:${10 + i * 4}px;background:${i < s.prio ? s.color : "#eee9dc"};display:block;border-radius:1px`
+        }))
+      })),
+
+      editorTitle: st.editingId == null ? "Nou sistema" : "Editar",
+      draftName: d.name,
+      setName: e => this.patch("name", e.target.value),
+
+      tasks: d.tasks.map(t => ({
+        value: t.text,
+        hasDetails: !!(t.details || "").trim(),
+        open: () => this.openSheet("task", null, t),
+        remove: () => this.removeTask(t.id)
+      })),
+      addTask: () => this.openSheet("task", null, null),
+
+      sportGroups: GROUPS.map(([key, label]) => ({
+        label,
+        count: d.sport[key].length ? String(d.sport[key].length) : "",
+        add: () => this.openSheet("day", key, null),
+        days: d.sport[key].map(day => ({
+          title: day.title,
+          text: day.text,
+          hasText: key !== "gym" && !!(day.text || "").trim(),
+          isGym: key === "gym",
+          gymSummary: (day.exercises && day.exercises.length)
+            ? day.exercises.length + (day.exercises.length === 1 ? " exercici" : " exercicis")
+            : "Cap exercici",
+          open: () => this.openSheet("day", key, day),
+          remove: () => this.removeDay(key, day.id)
+        }))
+      })),
+
+      showSheet: !!sh,
+      sheetTitleLabel: sh ? (sh.kind === "task" ? (sh.id == null ? "Nova tasca" : "Tasca") : (sh.id == null ? "Nou dia" : "Dia")) : "",
+      sheetNameLabel: sh && sh.kind === "task" ? "Tasca" : "Dia",
+      sheetNamePlaceholder: sh ? sh.hint : "",
+      sheetName: sh ? sh.name : "",
+      sheetDetails: sh ? sh.details : "",
+      sheetHasDetails: !!sh && !(sh.kind === "day" && sh.group === "gym"),
+      sheetGymNote: !!sh && sh.kind === "day" && sh.group === "gym",
+      setSheetName: e => this.setSheet("name", e.target.value),
+      setSheetDetails: e => this.setSheet("details", e.target.value),
+      sheetCancel: () => this.closeSheet(),
+      sheetSave: () => this.commitSheet(),
+
+      noExercises: !!sh && (sh.exercises || []).length === 0,
+      sheetExercises: (sh ? sh.exercises || [] : []).map((ex, i) => {
+        const e = EX_INDEX[ex.name] || { group: "", color: "#d2ccbb", subs: [] };
+        const open = sh.openEx === i;
+        const hasVol = ex.sets || ex.reps;
+        const hasP = !!(hasVol || ex.weight);
+        const vol = hasVol ? "(" + [ex.sets || "–", "×", ex.reps || "–"].join(" ") + ")" : "";
+        const presc = ex.weight ? ex.weight + " kg" : (hasVol ? "" : "Definir");
+        return {
+          name: ex.name,
+          meta: e.group + (e.subs.length ? " · " + e.subs.join(", ") : ""),
+          bar: `width:4px;align-self:stretch;min-height:34px;border-radius:2px;background:${e.color};display:block;flex-shrink:0`,
+          presc,
+          prescStyle: `font-family:'Oswald',sans-serif;font-size:14px;font-weight:500;letter-spacing:.02em;white-space:nowrap;cursor:pointer;padding-top:2px;color:${ex.weight ? "#1a1815" : "#B3121A"};opacity:${open ? .35 : 1};transition:opacity .25s ease`,
+          vol,
+          volStyle: `font-family:'Oswald',sans-serif;font-size:13.5px;font-weight:500;color:#1a1815;white-space:nowrap;opacity:${open ? .35 : 1};transition:opacity .25s ease`,
+          open,
+          sets: ex.sets, reps: ex.reps, weight: ex.weight,
+          toggle: () => this.toggleEx(i),
+          setSets: e2 => this.editEx(i, "sets", e2.target.value),
+          setReps: e2 => this.editEx(i, "reps", e2.target.value),
+          setWeight: e2 => this.editEx(i, "weight", e2.target.value),
+          remove: () => this.removeExercise(i)
+        };
+      }),
+      openPicker: () => this.setState({ picker: { sel: [] } }),
+      closePicker: () => this.setState({ picker: null }),
+      confirmPicker: () => this.confirmPicker(),
+      showPicker: !!pk,
+      pickerAction: pk && pk.sel.length ? "Afegeix " + pk.sel.length : "Fet",
+      library: LIBRARY.map(([group, color, items]) => ({
+        name: group,
+        dot: `width:8px;height:8px;border-radius:50%;background:${color};display:block;flex-shrink:0`,
+        items: items.map(([name, subs]) => {
+          const on = !!pk && pk.sel.includes(name);
+          return {
+            name,
+            subs: subs.join(", "),
+            toggle: () => this.togglePick(name),
+            tick: on ? "✓" : "",
+            nameStyle: `font-family:'Oswald',sans-serif;font-size:16.5px;font-weight:500;color:${on ? "#1a1815" : "#4a453c"}`,
+            box: `width:22px;height:22px;border-radius:50%;border:2px solid ${on ? "#B3121A" : "#e6e0cf"};background:${on ? "#B3121A" : "transparent"};color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .22s cubic-bezier(.22,.8,.28,1)`
+          };
+        })
+      })),
+      cancel: () => this.close(),
+      save: () => this.saveDraft(),
+
+      colorOpts: PALETTE.map(c => ({
+        pick: () => this.patch("color", c),
+        style: `width:32px;height:32px;border-radius:50%;background:${c};cursor:pointer;box-shadow:${d.color === c ? "0 0 0 2px #fff inset, 0 0 0 2px " + c : "none"};opacity:${d.color === c ? 1 : .35};transition:opacity .25s ease,box-shadow .25s ease`
+      })),
+
+      prioOpts: [0, 1, 2, 3].map(n => ({
+        label: String(n),
+        pick: () => this.patch("prio", n),
+        style: `flex:1;text-align:center;padding:13px 0;border-radius:4px;font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;cursor:pointer;border:2px solid ${d.prio === n ? "#1a1815" : "#eee9dc"};background:${d.prio === n ? "#1a1815" : "transparent"};color:${d.prio === n ? "#fff" : "#a29c8c"};transition:all .28s cubic-bezier(.22,.8,.28,1)`
+      })),
+      prioHint: PRIO_HINTS[d.prio],
+
+      canDelete: st.editingId != null,
+      confirmOn: st.confirm,
+      confirmOff: !st.confirm,
+      askDelete: () => this.setState({ confirm: true }),
+      cancelDelete: () => this.setState({ confirm: false }),
+      doDelete: () => this.removeDraft(),
+
+      tabs: names.map((label, i) => {
+        const on = i === st.active;
+        return {
+          label,
+          go: () => this.setState({ active: i }),
+          style: `display:flex;flex-direction:column;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.08em;font-weight:700;cursor:pointer;color:${on ? "#1a1815" : "#a29c8c"};transition:color .3s ease`,
+          mark: `width:18px;height:18px;display:block;border:2px solid ${on ? "#B3121A" : "currentColor"};background:${on ? "#B3121A" : "transparent"};border-radius:${on ? "44% 56% 60% 40% / 50% 45% 55% 50%" : "3px"};transition:all .35s cubic-bezier(.22,.8,.28,1)`
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

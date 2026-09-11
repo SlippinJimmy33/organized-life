@@ -801,7 +801,7 @@ class Component extends DCLogic {
         if (a && typeof a === "object") this.setState({ assign: a });
       }
       const rawL = localStorage.getItem("panell-salut:lastBackup");
-      if (rawL) this.setState({ lastBackup: rawL });
+      if (rawL && rawL !== "null") this.setState({ lastBackup: rawL });
     } catch (e) {}
   }
   componentDidUpdate() {
@@ -825,7 +825,10 @@ class Component extends DCLogic {
     }
     if (st.lastBackup !== this.__pLastBackup) {
       this.__pLastBackup = st.lastBackup;
-      try { localStorage.setItem("panell-salut:lastBackup", st.lastBackup); } catch (e) {}
+      try {
+        if (st.lastBackup) localStorage.setItem("panell-salut:lastBackup", st.lastBackup);
+        else localStorage.removeItem("panell-salut:lastBackup");
+      } catch (e) {}
     }
   }
 

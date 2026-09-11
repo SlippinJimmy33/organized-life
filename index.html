@@ -4,7 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Panell Salut</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="icon" href="./icons/favicon-32.png" sizes="32x32">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Panell Salut">
+<meta name="theme-color" content="#ffffff">
 <script src="./support.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+}
+</script>
 </head>
 <body>
 <x-dc>
@@ -58,6 +70,15 @@ input::placeholder,textarea::placeholder{color:#c9c3b4}
           <span style="position:absolute;top:7px;left:0;width:16px;height:2px;background:#B3121A;display:block"></span>
           <span style="position:absolute;left:7px;top:0;width:2px;height:16px;background:#B3121A;display:block"></span>
         </span>
+      </div>
+
+      <div style="flex-shrink:0;margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div style="display:flex;gap:18px">
+          <span onClick="{{ exportBackup }}" style="font-size:11px;letter-spacing:.1em;font-weight:700;color:#a29c8c;cursor:pointer;transition:color .25s ease" style-hover="color:#1a1815">Exporta còpia de seguretat</span>
+          <span onClick="{{ triggerImport }}" style="font-size:11px;letter-spacing:.1em;font-weight:700;color:#a29c8c;cursor:pointer;transition:color .25s ease" style-hover="color:#1a1815">Importa còpia de seguretat</span>
+        </div>
+        <span style="{{ backupNoteStyle }}">{{ backupNote }}</span>
+        <input type="file" accept="application/json" ref="{{ importInputRef }}" onChange="{{ importBackup }}" style="display:none">
       </div>
 
     </div>
@@ -675,8 +696,47 @@ class Component extends DCLogic {
     books: [],
     bookForm: null,
     bookOpen: null,
-    bookDel: false
+    bookDel: false,
+    lastBackup: null
   };
+
+  exportBackup() {
+    const st = this.state;
+    const data = { systems: st.systems, assign: st.assign, books: st.books, exportedAt: todayISO() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "panell-salut-" + todayISO() + ".json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    this.setState(st2 => ({ lastBackup: todayISO() }));
+  }
+
+  importBackup(e) {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!data || typeof data !== "object" || !Array.isArray(data.systems)) throw new Error("invalid");
+        this.setState(st2 => ({
+          systems: data.systems,
+          assign: (data.assign && typeof data.assign === "object") ? data.assign : {},
+          books: Array.isArray(data.books) ? data.books : [],
+          lastBackup: todayISO()
+        }));
+        alert("Còpia de seguretat importada correctament.");
+      } catch (err) {
+        alert("Aquest fitxer no és una còpia de seguretat vàlida de Panell Salut.");
+      }
+    };
+    reader.readAsText(file);
+  }
 
   newBook() {
     this.setState({ bookForm: {
@@ -740,18 +800,32 @@ class Component extends DCLogic {
         const a = JSON.parse(rawA);
         if (a && typeof a === "object") this.setState({ assign: a });
       }
+      const rawL = localStorage.getItem("panell-salut:lastBackup");
+      if (rawL) this.setState({ lastBackup: rawL });
     } catch (e) {}
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (!prevState) return;
-    if (prevState.systems !== this.state.systems) {
-      try { localStorage.setItem("panell-salut:systems", JSON.stringify(this.state.systems)); } catch (e) {}
+  componentDidUpdate() {
+    // NOTE: this runtime's StreamableComponent never passes prevState to
+    // componentDidUpdate (only prevProps), so change-detection via prevState
+    // comparison is not possible here. Persist unconditionally instead —
+    // cheap for this amount of data, and correctness matters more than
+    // skipping a few redundant writes.
+    const st = this.state;
+    if (st.systems !== this.__pSystems) {
+      this.__pSystems = st.systems;
+      try { localStorage.setItem("panell-salut:systems", JSON.stringify(st.systems)); } catch (e) {}
     }
-    if (prevState.books !== this.state.books) {
-      try { localStorage.setItem("panell-salut:books", JSON.stringify(this.state.books)); } catch (e) {}
+    if (st.books !== this.__pBooks) {
+      this.__pBooks = st.books;
+      try { localStorage.setItem("panell-salut:books", JSON.stringify(st.books)); } catch (e) {}
     }
-    if (prevState.assign !== this.state.assign) {
-      try { localStorage.setItem("panell-salut:assign", JSON.stringify(this.state.assign)); } catch (e) {}
+    if (st.assign !== this.__pAssign) {
+      this.__pAssign = st.assign;
+      try { localStorage.setItem("panell-salut:assign", JSON.stringify(st.assign)); } catch (e) {}
+    }
+    if (st.lastBackup !== this.__pLastBackup) {
+      this.__pLastBackup = st.lastBackup;
+      try { localStorage.setItem("panell-salut:lastBackup", st.lastBackup); } catch (e) {}
     }
   }
 
@@ -1133,6 +1207,22 @@ class Component extends DCLogic {
       showEditor: onEditor,
       isEmpty: st.systems.length === 0,
       newSystem: () => this.openNew(),
+
+      exportBackup: () => this.exportBackup(),
+      triggerImport: () => { if (this.importInputEl) this.importInputEl.click(); },
+      importBackup: e => this.importBackup(e),
+      importInputRef: el => { this.importInputEl = el; },
+      backupNote: (() => {
+        if (!st.lastBackup) return "Encara no has fet cap còpia de seguretat.";
+        const days = Math.floor((Date.now() - new Date(st.lastBackup + "T00:00:00").getTime()) / 86400000);
+        const when = days <= 0 ? "avui" : days === 1 ? "fa 1 dia" : ("fa " + days + " dies");
+        return "Última còpia: " + when;
+      })(),
+      backupNoteStyle: (() => {
+        const days = st.lastBackup ? Math.floor((Date.now() - new Date(st.lastBackup + "T00:00:00").getTime()) / 86400000) : null;
+        const stale = days == null || days > 20;
+        return `font-size:10.5px;letter-spacing:.02em;color:${stale ? "#B3121A" : "#c1bbab"}`;
+      })(),
 
       systems: st.systems.map(s => ({
         name: s.name,

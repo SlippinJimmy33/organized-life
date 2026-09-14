@@ -1,4 +1,4 @@
-const CACHE_NAME = "panell-salut-v2";
+const CACHE_NAME = "panell-salut-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -34,7 +34,7 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: "no-store" })
       .then((res) => {
         if (res.ok) {
           const copy = res.clone();

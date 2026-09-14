@@ -36,10 +36,6 @@ input::placeholder,textarea::placeholder{color:#c9c3b4}
   <sc-if value="{{ showMain }}" hint-placeholder-val="{{ true }}">
   <div style="position:absolute;inset:0;box-sizing:border-box;padding:64px 22px 104px;display:flex;flex-direction:column">
 
-    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:26px;flex-shrink:0">
-      <h1 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:48px;letter-spacing:.01em;margin:4px 0 4px;text-align:center">{{ title }}</h1>
-    </div>
-
     <sc-if value="{{ onSistemes }}" hint-placeholder-val="{{ true }}">
     <div style="flex:1;display:flex;flex-direction:column;min-height:0">
 
@@ -85,7 +81,7 @@ input::placeholder,textarea::placeholder{color:#c9c3b4}
     </sc-if>
 
     <sc-if value="{{ onActual }}" hint-placeholder-val="{{ false }}">
-    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+    <div onTouchStart="{{ swipeStart }}" onTouchEnd="{{ swipeEnd }}" style="flex:1;display:flex;flex-direction:column;min-height:0">
 
       <div style="display:flex;gap:24px;justify-content:center;margin:-12px 0 22px;flex-shrink:0">
         <sc-for list="{{ actualViews }}" as="v" hint-placeholder-count="2">
@@ -223,41 +219,115 @@ input::placeholder,textarea::placeholder{color:#c9c3b4}
     </div>
     </sc-if>
 
-    <sc-if value="{{ onLlibres }}" hint-placeholder-val="{{ false }}">
-    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
-
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;margin:-16px 0 8px;flex-shrink:0">
-        <span style="font-family:'Oswald',sans-serif;font-size:44px;font-weight:700;line-height:1;letter-spacing:.01em">{{ readCount }}</span>
-        <span style="font-size:11px;letter-spacing:.14em;font-weight:800;color:#8a8373">{{ readLabel }}</span>
-        <sc-if value="{{ hasReading }}" hint-placeholder-val="{{ false }}">
-          <span onClick="{{ goToReading }}" style="margin-top:9px;font-size:12.5px;color:#B3121A;cursor:pointer;letter-spacing:.01em;text-align:center">Ara: {{ readingTitle }}</span>
-        </sc-if>
-      </div>
-
-      <sc-if value="{{ booksEmpty }}" hint-placeholder-val="{{ true }}">
-        <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 24px">
-          <div style="font-size:13px;line-height:1.6;color:#a29c8c;max-width:210px;text-wrap:pretty">El camí encara no ha començat. Afegeix el primer llibre.</div>
+    <sc-if value="{{ onEsport }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 24px;min-height:0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:18px;width:100%">
+        <span style="font-size:13px;line-height:1.6;color:#a29c8c;letter-spacing:.02em">En construccio...</span>
+        <span style="font-family:'Oswald',sans-serif;font-size:34px;font-weight:400;line-height:1.05;letter-spacing:.03em;color:#B3121A">YEAH BUDDY</span>
+        <div style="width:100%;height:280px;border-radius:16px;background:#f7f4ec;border:1.5px solid #eee9dc;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 20px;box-sizing:border-box">
+          <span style="font-size:12.5px;line-height:1.6;color:#c1bbab">Arrossega aquí una foto d'en Ronnie Coleman</span>
         </div>
-      </sc-if>
+      </div>
+    </div>
+    </sc-if>
 
-      <div ref="{{ pathRef }}" style="flex:1;overflow-y:auto;margin:0 -22px;padding:0 22px">
-        <div style="{{ pathBox }}">
-          <svg viewBox="{{ pathView }}" style="{{ pathSvg }}" preserveAspectRatio="none">
-            <path d="{{ pathD }}" fill="none" stroke="#e6e0cf" stroke-width="1.5" stroke-linecap="round"></path>
-            <path d="{{ tailD }}" fill="none" stroke="#e6e0cf" stroke-width="1.5" stroke-linecap="round" opacity="0.45"></path>
-          </svg>
-          <sc-for list="{{ bookNodes }}" as="b" hint-placeholder-count="0">
-            <div style="{{ b.wrap }}">
-              <div onClick="{{ b.open }}" style="{{ b.row }}">
-                <span style="{{ b.dot }}"></span>
-                <span style="{{ b.titleStyle }}">{{ b.title }}</span>
+    <sc-if value="{{ onMisions }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0;gap:20px">
+
+      <div style="flex:0 0 44%;display:flex;flex-direction:column;min-height:0;border:1.5px solid #eee9dc;border-radius:19px 22px 18px 21px;padding:15px 15px 13px;box-sizing:border-box">
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;padding-bottom:13px">
+          <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">En progrés</label>
+          <span style="flex:1;height:1px;background:#f2eee2;display:block"></span>
+          <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#c1bbab;letter-spacing:.04em">{{ doingCount }}</span>
+        </div>
+        <sc-if value="{{ noDoing }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 10px">
+            <div style="font-size:12.5px;line-height:1.6;color:#a29c8c;max-width:180px;text-wrap:pretty">Cap projecte obert ara mateix.</div>
+          </div>
+        </sc-if>
+        <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:15px;min-height:0">
+          <sc-for list="{{ doingProjects }}" as="p" hint-placeholder-count="0">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <span onClick="{{ p.advance }}" style="width:19px;height:19px;flex-shrink:0;box-sizing:border-box;border:2px solid #B3121A;border-radius:6px 5px 7px 5px;cursor:pointer;display:block;margin-top:2px;transition:background .25s ease" style-hover="background:#fbeceb"></span>
+              <div onClick="{{ p.open }}" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;cursor:pointer">
+                <span style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;line-height:1.2;letter-spacing:.01em;text-wrap:pretty">{{ p.name }}</span>
+                <sc-if value="{{ p.hasNotes }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:12.5px;line-height:1.55;color:#a29c8c;text-wrap:pretty">{{ p.notes }}</span>
+                </sc-if>
               </div>
-              <sc-if value="{{ b.showYear }}" hint-placeholder-val="{{ false }}">
-                <span style="{{ b.yearStyle }}">{{ b.year }}</span>
-              </sc-if>
             </div>
           </sc-for>
         </div>
+      </div>
+
+      <div style="flex:1;overflow-y:auto;min-height:0;display:flex;flex-direction:column;gap:26px;margin:0 -4px;padding:0 4px 2px">
+
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;align-items:center;gap:10px;padding-bottom:6px">
+            <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Per fer</label>
+            <span style="flex:1;height:1px;background:#f2eee2;display:block"></span>
+            <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#c1bbab;letter-spacing:.04em">{{ todoCount }}</span>
+          </div>
+          <sc-if value="{{ noTodo }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:12.5px;line-height:1.6;color:#a29c8c;padding:4px 0 2px;text-wrap:pretty">Res apuntat encara.</div>
+          </sc-if>
+          <sc-for list="{{ todoProjects }}" as="p" hint-placeholder-count="0">
+            <div style="display:flex;gap:13px;align-items:center;padding:11px 0;border-bottom:1px solid #f4f0e5">
+              <span onClick="{{ p.advance }}" style="width:17px;height:17px;flex-shrink:0;box-sizing:border-box;border:2px solid #d2ccbb;border-radius:6px 5px 7px 5px;cursor:pointer;display:block;transition:border-color .25s ease" style-hover="border-color:#B3121A"></span>
+              <span onClick="{{ p.open }}" style="flex:1;min-width:0;font-family:'Oswald',sans-serif;font-size:17px;font-weight:500;line-height:1.25;letter-spacing:.01em;cursor:pointer;text-wrap:pretty">{{ p.name }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;align-items:center;gap:10px;padding-bottom:6px">
+            <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Acabats</label>
+            <span style="flex:1;height:1px;background:#f2eee2;display:block"></span>
+            <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#c1bbab;letter-spacing:.04em">{{ doneCount }}</span>
+          </div>
+          <sc-if value="{{ noDone }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:12.5px;line-height:1.6;color:#a29c8c;padding:4px 0 2px;text-wrap:pretty">Cap projecte acabat de moment.</div>
+          </sc-if>
+          <sc-for list="{{ doneProjects }}" as="p" hint-placeholder-count="0">
+            <div style="display:flex;gap:13px;align-items:center;padding:11px 0;border-bottom:1px solid #f4f0e5">
+              <span onClick="{{ p.advance }}" style="width:17px;height:17px;flex-shrink:0;box-sizing:border-box;background:#1a1815;border-radius:6px 5px 7px 5px;cursor:pointer;display:block"></span>
+              <span onClick="{{ p.open }}" style="flex:1;min-width:0;font-family:'Oswald',sans-serif;font-size:17px;font-weight:500;line-height:1.25;letter-spacing:.01em;color:#8a8373;cursor:pointer;text-wrap:pretty">{{ p.name }}</span>
+              <span style="font-size:11px;color:#c1bbab;letter-spacing:.03em;flex-shrink:0">{{ p.doneLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+      </div>
+
+      <div onClick="{{ newProject }}" style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid #1a1815;border-radius:999px;padding:15px 24px;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">
+        <span style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:.02em">Nou projecte</span>
+        <span style="position:relative;width:16px;height:16px;display:block;flex-shrink:0">
+          <span style="position:absolute;top:7px;left:0;width:16px;height:2px;background:#B3121A;display:block"></span>
+          <span style="position:absolute;left:7px;top:0;width:2px;height:16px;background:#B3121A;display:block"></span>
+        </span>
+      </div>
+
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ onLlibres }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+
+      <sc-if value="{{ booksEmpty }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 24px">
+          <div style="font-size:13px;line-height:1.6;color:#a29c8c;max-width:210px;text-wrap:pretty">Encara no hi ha llibres. Afegeix el primer.</div>
+        </div>
+      </sc-if>
+
+      <div style="flex:1;overflow-y:auto;margin:0 -22px;padding:0 22px;display:flex;flex-direction:column">
+        <sc-for list="{{ bookList }}" as="b" hint-placeholder-count="0">
+          <div onClick="{{ b.open }}" style="display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid #eee9dc;cursor:pointer;transition:opacity .25s ease" style-hover="opacity:.6">
+            <span style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:500;line-height:1.2;letter-spacing:.01em;color:#1a1815;flex:1;min-width:0;text-wrap:pretty">{{ b.title }}</span>
+            <sc-if value="{{ b.hasQuotes }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#B3121A;flex-shrink:0">{{ b.quoteCount }}</span>
+            </sc-if>
+          </div>
+        </sc-for>
       </div>
 
       <div onClick="{{ newBook }}" style="flex-shrink:0;margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid #1a1815;border-radius:999px;padding:15px 24px;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">
@@ -290,43 +360,107 @@ input::placeholder,textarea::placeholder{color:#c9c3b4}
       <div style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;letter-spacing:.02em">Nou llibre</div>
       <div onClick="{{ saveBook }}" style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#B3121A;cursor:pointer">Guarda</div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:26px">
-      <div style="display:flex;flex-direction:column;gap:9px">
-        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Títol</label>
-        <input value="{{ bookTitle }}" onChange="{{ setBookTitle }}" placeholder="{{ bookHint }}" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:23px;font-weight:500;color:#1a1815;padding:0 0 9px;width:100%;box-sizing:border-box;transition:border-color .25s ease">
-      </div>
-      <div style="display:flex;flex-direction:column;gap:11px">
-        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Estat</label>
-        <div style="display:flex;gap:10px">
-          <sc-for list="{{ bookStates }}" as="s" hint-placeholder-count="2">
-            <div onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.label }}</div>
-          </sc-for>
-        </div>
-      </div>
-      <sc-if value="{{ bookIsRead }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;flex-direction:column;gap:9px">
-        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Acabat el</label>
-        <input type="date" value="{{ bookDate }}" onChange="{{ setBookDate }}" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:19px;font-weight:500;color:#1a1815;padding:0 0 9px;width:100%;box-sizing:border-box">
-      </div>
-      </sc-if>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Títol</label>
+      <input value="{{ bookTitle }}" onChange="{{ setBookTitle }}" placeholder="{{ bookHint }}" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:23px;font-weight:500;color:#1a1815;padding:0 0 9px;width:100%;box-sizing:border-box;transition:border-color .25s ease">
     </div>
   </div>
   </sc-if>
 
   <sc-if value="{{ showBookCard }}" hint-placeholder-val="{{ false }}">
-  <div onClick="{{ closeBook }}" style="position:absolute;inset:0;background:rgba(26,24,21,.2);z-index:14"></div>
-  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -18px 50px rgba(26,24,21,.22);display:flex;flex-direction:column;gap:20px;z-index:15;padding:28px 24px 34px;animation:sheetIn .34s cubic-bezier(.22,.8,.28,1) both">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
-      <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
-        <span style="font-family:'Oswald',sans-serif;font-size:26px;font-weight:600;line-height:1.15;letter-spacing:.01em;text-wrap:pretty">{{ cardTitle }}</span>
-        <span style="font-size:11.5px;color:#a29c8c;letter-spacing:.03em">{{ cardMeta }}</span>
-      </div>
-      <div onClick="{{ closeBook }}" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#c9c3b4;font-size:19px;cursor:pointer;flex-shrink:0;transition:color .2s ease" style-hover="color:#1a1815">×</div>
+  <div style="position:absolute;inset:0;background:#fff;z-index:20;display:flex;flex-direction:column;padding:64px 22px 34px;box-sizing:border-box;animation:secIn .3s cubic-bezier(.22,.8,.28,1) both">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;padding-bottom:22px">
+      <div onClick="{{ closeBook }}" style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#a29c8c;cursor:pointer;transition:color .25s ease" style-hover="color:#1a1815">Tanca</div>
+      <div style="font-size:11px;letter-spacing:.14em;font-weight:800;color:#8a8373">Llibre</div>
+      <div style="width:34px"></div>
     </div>
-    <sc-if value="{{ cardIsReading }}" hint-placeholder-val="{{ false }}">
-      <div onClick="{{ finishBook }}" style="border:2px solid #1a1815;border-radius:999px;padding:13px 22px;text-align:center;font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">Marca com a llegit</div>
+
+    <div style="flex-shrink:0;display:flex;flex-direction:column;gap:4px;padding-bottom:20px">
+      <span style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:600;line-height:1.15;letter-spacing:.01em;text-wrap:pretty">{{ cardTitle }}</span>
+      <span style="font-size:11.5px;color:#a29c8c;letter-spacing:.03em">{{ cardMeta }}</span>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;margin:0 -22px;padding:0 22px;display:flex;flex-direction:column;gap:18px">
+      <sc-for list="{{ quotes }}" as="q" hint-placeholder-count="0">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="width:2px;align-self:stretch;background:#B3121A;flex-shrink:0;display:block"></span>
+          <span style="flex:1;min-width:0;font-size:14.5px;line-height:1.65;color:#1a1815;text-wrap:pretty">{{ q.text }}</span>
+          <span onClick="{{ q.remove }}" style="font-size:15px;color:#c9c3b4;cursor:pointer;flex-shrink:0;transition:color .2s ease" style-hover="color:#B3121A">×</span>
+        </div>
+      </sc-for>
+      <sc-if value="{{ noQuotes }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:13px;line-height:1.6;color:#a29c8c;text-wrap:pretty">Cap frase guardada encara.</div>
+      </sc-if>
+      <sc-if value="{{ quoteDrafting }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px;padding-top:2px">
+          <textarea value="{{ quoteDraft }}" onChange="{{ setQuoteDraft }}" placeholder="La frase que et vols quedar" rows="4" style="border:none;border-left:2px solid #B3121A;background:transparent;font-family:'Archivo',sans-serif;font-size:14.5px;line-height:1.65;color:#1a1815;padding:0 0 0 12px;width:100%;box-sizing:border-box;resize:none;outline:none"></textarea>
+          <div style="display:flex;gap:10px">
+            <div onClick="{{ cancelQuote }}" style="flex:1;text-align:center;border:2px solid #eee9dc;border-radius:999px;padding:11px 0;font-family:'Oswald',sans-serif;font-size:15px;font-weight:500;color:#a29c8c;cursor:pointer">Cancel·la</div>
+            <div onClick="{{ saveQuote }}" style="flex:1;text-align:center;border:2px solid #1a1815;border-radius:999px;padding:11px 0;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;color:#1a1815;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">Guarda la frase</div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ canAddQuote }}" hint-placeholder-val="{{ true }}">
+      <div onClick="{{ newQuote }}" style="flex-shrink:0;margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid #1a1815;border-radius:999px;padding:15px 24px;cursor:pointer;transition:background .3s cubic-bezier(.22,.8,.28,1)" style-hover="background:#f7f4ec">
+        <span style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:.02em">Afegeix una frase</span>
+        <span style="position:relative;width:16px;height:16px;display:block;flex-shrink:0">
+          <span style="position:absolute;top:7px;left:0;width:16px;height:2px;background:#B3121A;display:block"></span>
+          <span style="position:absolute;left:7px;top:0;width:2px;height:16px;background:#B3121A;display:block"></span>
+        </span>
+      </div>
     </sc-if>
     <div onClick="{{ removeBook }}" style="{{ cardDelStyle }}">{{ cardDelLabel }}</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showProjForm }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#fff;z-index:20;display:flex;flex-direction:column;padding:64px 22px 34px;box-sizing:border-box;animation:secIn .3s cubic-bezier(.22,.8,.28,1) both">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;padding-bottom:26px">
+      <div onClick="{{ cancelProj }}" style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#a29c8c;cursor:pointer;transition:color .25s ease" style-hover="color:#1a1815">Cancel·la</div>
+      <div style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;letter-spacing:.02em">Nou projecte</div>
+      <div onClick="{{ saveProj }}" style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#B3121A;cursor:pointer">Guarda</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:26px">
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Nom</label>
+        <input value="{{ projName }}" onChange="{{ setProjName }}" placeholder="{{ projHint }}" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:23px;font-weight:500;color:#1a1815;padding:0 0 9px;width:100%;box-sizing:border-box;transition:border-color .25s ease">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Detalls</label>
+        <textarea value="{{ projNotes }}" onChange="{{ setProjNotes }}" placeholder="Què vol dir fer-lo" rows="5" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-size:14.5px;line-height:1.65;color:#1a1815;padding:0 0 10px;width:100%;box-sizing:border-box;resize:none"></textarea>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showProjCard }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#fff;z-index:20;display:flex;flex-direction:column;padding:64px 22px 34px;box-sizing:border-box;animation:secIn .3s cubic-bezier(.22,.8,.28,1) both">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;padding-bottom:22px">
+      <div onClick="{{ closeProj }}" style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#a29c8c;cursor:pointer;transition:color .25s ease" style-hover="color:#1a1815">Tanca</div>
+      <div style="font-size:11px;letter-spacing:.14em;font-weight:800;color:#8a8373">Projecte</div>
+      <div style="width:38px"></div>
+    </div>
+    <div style="flex:1;overflow-y:auto;margin:0 -22px;padding:0 22px;display:flex;flex-direction:column;gap:26px;min-height:0">
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Nom</label>
+        <input value="{{ openName }}" onChange="{{ setOpenName }}" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-family:'Oswald',sans-serif;font-size:26px;font-weight:600;color:#1a1815;padding:0 0 9px;width:100%;box-sizing:border-box;transition:border-color .25s ease">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Estat</label>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ projStates }}" as="s" hint-placeholder-count="3">
+            <div onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#8a8373">Detalls</label>
+        <textarea value="{{ openNotes }}" onChange="{{ setOpenNotes }}" placeholder="Què vol dir fer-lo" rows="6" style="border:none;border-bottom:2px solid #eee9dc;background:transparent;font-size:14.5px;line-height:1.65;color:#1a1815;padding:0 0 10px;width:100%;box-sizing:border-box;resize:none"></textarea>
+      </div>
+    </div>
+    <div onClick="{{ removeProj }}" style="{{ projDelStyle }}">{{ projDelLabel }}</div>
   </div>
   </sc-if>
 
@@ -680,7 +814,7 @@ const emptyDraft = () => ({ name: "", color: PALETTE[0], prio: 1, tasks: [], spo
 
 class Component extends DCLogic {
   state = {
-    active: 4,
+    active: 0,
     screen: "main",
     editingId: null,
     confirm: false,
@@ -697,12 +831,17 @@ class Component extends DCLogic {
     bookForm: null,
     bookOpen: null,
     bookDel: false,
+    quoteDraft: null,
+    projects: [],
+    projForm: null,
+    projOpen: null,
+    projDel: false,
     lastBackup: null
   };
 
   exportBackup() {
     const st = this.state;
-    const data = { systems: st.systems, assign: st.assign, books: st.books, exportedAt: todayISO() };
+    const data = { systems: st.systems, assign: st.assign, books: st.books, projects: st.projects, exportedAt: todayISO() };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -728,6 +867,7 @@ class Component extends DCLogic {
           systems: data.systems,
           assign: (data.assign && typeof data.assign === "object") ? data.assign : {},
           books: Array.isArray(data.books) ? data.books : [],
+          projects: Array.isArray(data.projects) ? data.projects : [],
           lastBackup: todayISO()
         }));
         alert("Còpia de seguretat importada correctament.");
@@ -740,26 +880,56 @@ class Component extends DCLogic {
 
   newBook() {
     this.setState({ bookForm: {
-      title: "", status: "reading", date: todayISO(),
+      title: "",
       hint: MANTRAS[Math.floor(Math.random() * MANTRAS.length)]
     } });
+  }
+  newProject() {
+    this.setState({ projForm: { name: "", notes: "", hint: MANTRAS[Math.floor(Math.random() * MANTRAS.length)] } });
+  }
+  patchProjForm(k, v) { this.setState(st => ({ projForm: { ...st.projForm, [k]: v } })); }
+  saveProject() {
+    const f = this.state.projForm;
+    const name = (f.name || "").trim() || "Sense nom";
+    this.setState(st => {
+      const id = Math.max(0, ...st.projects.map(p => p.id)) + 1;
+      return { projects: [...st.projects, { id, name, notes: f.notes || "", status: "todo", doneAt: null }], projForm: null };
+    });
+  }
+  patchProject(id, patch) {
+    this.setState(st => ({ projects: st.projects.map(p => p.id === id ? { ...p, ...patch } : p) }));
+  }
+  setProjStatus(id, status) {
+    this.patchProject(id, { status, doneAt: status === "done" ? todayISO() : null });
+  }
+  removeProject(id) {
+    this.setState(st => ({ projects: st.projects.filter(p => p.id !== id), projOpen: null, projDel: false }));
   }
   patchBook(k, v) { this.setState(st => ({ bookForm: { ...st.bookForm, [k]: v } })); }
   saveBook() {
     const f = this.state.bookForm;
     const title = (f.title || "").trim() || "Sense títol";
     this.setState(st => {
-      let books = st.books;
-      if (f.status === "reading") books = books.map(b => b.status === "reading" ? { ...b, status: "read", finishedAt: todayISO() } : b);
+      const books = st.books;
       const id = Math.max(0, ...books.map(b => b.id)) + 1;
-      return { books: [...books, { id, title, status: f.status, finishedAt: f.status === "read" ? f.date : null }], bookForm: null };
+      return { books: [...books, { id, title, quotes: [] }], bookForm: null };
     });
   }
-  finishBook(id) {
-    this.setState(st => ({ books: st.books.map(b => b.id === id ? { ...b, status: "read", finishedAt: todayISO() } : b), bookOpen: null }));
-  }
   removeBook(id) {
-    this.setState(st => ({ books: st.books.filter(b => b.id !== id), bookOpen: null, bookDel: false }));
+    this.setState(st => ({ books: st.books.filter(b => b.id !== id), bookOpen: null, bookDel: false, quoteDraft: null }));
+  }
+  saveQuote(id) {
+    const text = (this.state.quoteDraft || "").trim();
+    if (!text) { this.setState({ quoteDraft: null }); return; }
+    this.setState(st => ({
+      books: st.books.map(b => b.id === id ? { ...b, quotes: [...(b.quotes || []), text] } : b),
+      quoteDraft: null
+    }));
+  }
+  removeQuote(id, i) {
+    this.setState(st => ({
+      books: st.books.map(b => b.id === id ? { ...b, quotes: (b.quotes || []).filter((q, j) => j !== i) } : b)
+    }));
   }
 
   toggleDone(y, w, itemId) {
@@ -790,6 +960,11 @@ class Component extends DCLogic {
           this.setState({ systems: saved });
         }
       }
+      const rawP = localStorage.getItem("panell-salut:projects");
+      if (rawP) {
+        const p = JSON.parse(rawP);
+        if (Array.isArray(p)) this.setState({ projects: p });
+      }
       const rawB = localStorage.getItem("panell-salut:books");
       if (rawB) {
         const b = JSON.parse(rawB);
@@ -804,29 +979,23 @@ class Component extends DCLogic {
       if (rawL && rawL !== "null") this.setState({ lastBackup: rawL });
     } catch (e) {}
   }
-  componentDidUpdate() {
-    // NOTE: this runtime's StreamableComponent never passes prevState to
-    // componentDidUpdate (only prevProps), so change-detection via prevState
-    // comparison is not possible here. Persist unconditionally instead —
-    // cheap for this amount of data, and correctness matters more than
-    // skipping a few redundant writes.
-    const st = this.state;
-    if (st.systems !== this.__pSystems) {
-      this.__pSystems = st.systems;
-      try { localStorage.setItem("panell-salut:systems", JSON.stringify(st.systems)); } catch (e) {}
+  componentDidUpdate(prevProps, prevState) {
+    const ps = prevState || prevProps || {};
+    if (ps.systems !== this.state.systems) {
+      try { localStorage.setItem("panell-salut:systems", JSON.stringify(this.state.systems)); } catch (e) {}
     }
-    if (st.books !== this.__pBooks) {
-      this.__pBooks = st.books;
-      try { localStorage.setItem("panell-salut:books", JSON.stringify(st.books)); } catch (e) {}
+    if (ps.projects !== this.state.projects) {
+      try { localStorage.setItem("panell-salut:projects", JSON.stringify(this.state.projects)); } catch (e) {}
     }
-    if (st.assign !== this.__pAssign) {
-      this.__pAssign = st.assign;
-      try { localStorage.setItem("panell-salut:assign", JSON.stringify(st.assign)); } catch (e) {}
+    if (ps.books !== this.state.books) {
+      try { localStorage.setItem("panell-salut:books", JSON.stringify(this.state.books)); } catch (e) {}
     }
-    if (st.lastBackup !== this.__pLastBackup) {
-      this.__pLastBackup = st.lastBackup;
+    if (ps.assign !== this.state.assign) {
+      try { localStorage.setItem("panell-salut:assign", JSON.stringify(this.state.assign)); } catch (e) {}
+    }
+    if (ps.lastBackup !== this.state.lastBackup) {
       try {
-        if (st.lastBackup) localStorage.setItem("panell-salut:lastBackup", st.lastBackup);
+        if (this.state.lastBackup) localStorage.setItem("panell-salut:lastBackup", this.state.lastBackup);
         else localStorage.removeItem("panell-salut:lastBackup");
       } catch (e) {}
     }
@@ -904,6 +1073,15 @@ class Component extends DCLogic {
   }
   patch(k, v) { this.setState(st => ({ draft: { ...st.draft, [k]: v } })); }
   close() { this.setState({ screen: "main", editingId: null, confirm: false, draft: null, sheet: null }); }
+  goTab(i) {
+    this.setState({
+      active: i,
+      screen: "main", editingId: null, draft: null, confirm: false, sheet: null, picker: null,
+      weekOpen: null,
+      bookForm: null, bookOpen: null, bookDel: false, quoteDraft: null,
+      projForm: null, projOpen: null, projDel: false
+    });
+  }
   saveDraft() {
     const d = this.state.draft;
     const name = (d.name || "").trim() || "Sistema sense nom";
@@ -967,54 +1145,22 @@ class Component extends DCLogic {
     const woSys = wo ? sysFor(wo.year, wo.week) : null;
     const woPast = !!wo && (wo.year < now.year || (wo.year === now.year && wo.week < now.week));
 
-    const bf = st.bookForm, bo = st.bookOpen ? st.books.find(b => b.id === st.bookOpen) : null;
-    const readBooks = st.books.filter(b => b.status === "read")
-      .sort((a, b) => String(a.finishedAt || "").localeCompare(String(b.finishedAt || "")));
-    const reading = st.books.find(b => b.status === "reading") || null;
-    const ordered = reading ? [...readBooks, reading] : readBooks;
-
-    const cx = PATH_W / 2;
-    const pts = ordered.map((b, i) => ({
-      x: cx + NODE_AMP * Math.sin(i * 0.9 + 0.4),
-      y: NODE_TOP + (i === 0 ? 0 : 0)
-    }));
-    let y = NODE_TOP;
-    pts.forEach((p, i) => { if (i) y += 88 + ((i * 37) % 33); p.y = y; });
-    const pathH = ordered.length ? y + (reading ? 96 : 46) : 1;
-
-    const seg = (a, b) => `C ${a.x} ${a.y + (b.y - a.y) * 0.45}, ${b.x} ${b.y - (b.y - a.y) * 0.45}, ${b.x} ${b.y}`;
-    let pathD = "", tailD = "";
-    if (pts.length) {
-      pathD = `M ${pts[0].x} ${pts[0].y}`;
-      for (let i = 1; i < pts.length; i++) pathD += " " + seg(pts[i - 1], pts[i]);
-      const last = pts[pts.length - 1];
-      if (reading) tailD = `M ${last.x} ${last.y} C ${last.x} ${last.y + 26}, ${cx} ${last.y + 40}, ${cx - 6} ${last.y + 62}`;
-    }
-
-    const nodes = ordered.map((b, i) => {
-      const p = pts[i], isNow = b.status === "reading";
-      const yr = (b.finishedAt || "").slice(0, 4);
-      const prevYr = i ? (ordered[i - 1].finishedAt || "").slice(0, 4) : "";
-      const right = p.x <= cx;
-      const size = isNow ? 15 : 11;
-      return {
-        title: b.title,
-        open: () => this.setState({ bookOpen: b.id, bookDel: false }),
-        wrap: `position:absolute;left:0;top:0;width:${PATH_W}px;height:0`,
-        row: `position:absolute;top:${p.y}px;${right ? "left:" + p.x + "px" : "right:" + (PATH_W - p.x) + "px"};`
-          + `transform:translateY(-50%);display:flex;align-items:center;gap:13px;cursor:pointer;`
-          + `flex-direction:${right ? "row" : "row-reverse"};max-width:${right ? PATH_W - p.x - 6 : p.x - 6}px;`
-          + `margin-${right ? "left" : "right"}:-${size / 2}px;transition:opacity .25s ease`,
-        dot: `width:${size}px;height:${size}px;border-radius:50%;display:block;flex-shrink:0;box-sizing:border-box;`
-          + (isNow ? "background:#fff;border:2.5px solid #B3121A" : "background:#1a1815"),
-        titleStyle: `font-family:'Oswald',sans-serif;font-size:${isNow ? 20 : 17}px;font-weight:${isNow ? 600 : 500};`
-          + `color:#1a1815;line-height:1.2;text-align:${right ? "left" : "right"};text-wrap:pretty`,
-        showYear: !isNow && !!yr && yr !== prevYr,
-        year: yr,
-        yearStyle: `position:absolute;top:${p.y - 26}px;${right ? "left:" + (p.x - 4) + "px" : "right:" + (PATH_W - p.x - 4) + "px"};`
-          + `font-size:10px;letter-spacing:.16em;font-weight:800;color:#c1bbab`
-      };
+    const pf = st.projForm, po = st.projOpen ? st.projects.find(p => p.id === st.projOpen) : null;
+    const projTodo = st.projects.filter(p => p.status === "todo");
+    const projDoing = st.projects.filter(p => p.status === "doing");
+    const projDone = st.projects.filter(p => p.status === "done")
+      .sort((a, b) => String(b.doneAt || "").localeCompare(String(a.doneAt || "")));
+    const projRow = p => ({
+      name: p.name,
+      notes: p.notes || "",
+      hasNotes: !!(p.notes || "").trim(),
+      doneLabel: (p.doneAt || "").slice(0, 4),
+      open: () => this.setState({ projOpen: p.id, projDel: false }),
+      advance: () => this.setProjStatus(p.id, p.status === "todo" ? "doing" : (p.status === "doing" ? "done" : "doing"))
     });
+
+    const bf = st.bookForm, bo = st.bookOpen ? st.books.find(b => b.id === st.bookOpen) : null;
+    const boQuotes = bo ? (bo.quotes || []) : [];
 
     return {
       title: names[st.active],
@@ -1031,6 +1177,19 @@ class Component extends DCLogic {
       }),
       viewWeek: st.active === 0 && st.actualView === "week",
       viewProgres: st.active === 0 && st.actualView === "progres",
+      swipeStart: e => {
+        const t = e.touches && e.touches[0];
+        this._sw = t ? { x: t.clientX, y: t.clientY } : null;
+      },
+      swipeEnd: e => {
+        const s = this._sw, t = e.changedTouches && e.changedTouches[0];
+        this._sw = null;
+        if (!s || !t) return;
+        const dx = t.clientX - s.x, dy = t.clientY - s.y;
+        if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+        const next = dx < 0 ? "progres" : "week";
+        if (next !== this.state.actualView) this.setState({ actualView: next });
+      },
 
       curWeekNum: String(now.week),
       curNone: !cur,
@@ -1156,57 +1315,86 @@ class Component extends DCLogic {
         };
       }) : [],
 
+      onEsport: st.active === 1,
+      onMisions: st.active === 2,
+      doingProjects: projDoing.map(projRow),
+      todoProjects: projTodo.map(projRow),
+      doneProjects: projDone.map(projRow),
+      doingCount: String(projDoing.length),
+      todoCount: String(projTodo.length),
+      doneCount: String(projDone.length),
+      noDoing: projDoing.length === 0,
+      noTodo: projTodo.length === 0,
+      noDone: projDone.length === 0,
+      newProject: () => this.newProject(),
+
+      showProjForm: !!pf,
+      projName: pf ? pf.name : "",
+      projNotes: pf ? pf.notes : "",
+      projHint: pf ? pf.hint : "",
+      setProjName: e => this.patchProjForm("name", e.target.value),
+      setProjNotes: e => this.patchProjForm("notes", e.target.value),
+      cancelProj: () => this.setState({ projForm: null }),
+      saveProj: () => this.saveProject(),
+
+      showProjCard: !!po,
+      openName: po ? po.name : "",
+      openNotes: po ? (po.notes || "") : "",
+      setOpenName: e => this.patchProject(po.id, { name: e.target.value }),
+      setOpenNotes: e => this.patchProject(po.id, { notes: e.target.value }),
+      projStates: [["todo", "Per fer"], ["doing", "En progrés"], ["done", "Acabat"]].map(([k, label]) => {
+        const on = !!po && po.status === k;
+        return {
+          label,
+          pick: () => this.setProjStatus(po.id, k),
+          style: `flex:1;text-align:center;border:2px solid ${on ? "#1a1815" : "#eee9dc"};border-radius:999px;padding:10px 0;`
+            + `font-family:'Oswald',sans-serif;font-size:13.5px;font-weight:${on ? 600 : 500};letter-spacing:.01em;`
+            + `color:${on ? "#1a1815" : "#a29c8c"};cursor:pointer;transition:all .25s cubic-bezier(.22,.8,.28,1)`
+        };
+      }),
+      closeProj: () => this.setState({ projOpen: null, projDel: false }),
+      removeProj: () => st.projDel ? this.removeProject(po.id) : this.setState({ projDel: true }),
+      projDelLabel: st.projDel ? "Confirma que el vols suprimir" : "Suprimeix el projecte",
+      projDelStyle: `flex-shrink:0;margin-top:16px;font-size:11px;letter-spacing:.12em;font-weight:700;cursor:pointer;align-self:flex-start;transition:color .25s ease;color:${st.projDel ? "#B3121A" : "#a29c8c"}`,
+
       onLlibres: st.active === 3,
-      readCount: String(readBooks.length),
-      readLabel: readBooks.length === 1 ? "llibre llegit" : "llibres llegits",
-      hasReading: !!reading,
-      readingTitle: reading ? reading.title : "",
-      goToReading: () => { const el = this.pathEl; if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }); },
-      booksEmpty: ordered.length === 0,
-      pathRef: el => {
-        this.pathEl = el;
-        if (el && !this._scrolled) { this._scrolled = true; requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; }); }
-        if (!el) this._scrolled = false;
-      },
-      pathBox: `position:relative;width:${PATH_W}px;height:${pathH}px;margin:0 auto`,
-      pathView: `0 0 ${PATH_W} ${pathH}`,
-      pathSvg: `position:absolute;top:0;left:0;width:${PATH_W}px;height:${pathH}px;display:block;overflow:visible`,
-      pathD: pathD,
-      tailD: tailD,
-      bookNodes: nodes,
+      booksEmpty: st.books.length === 0,
+      bookList: st.books.map(b => ({
+        title: b.title,
+        hasQuotes: (b.quotes || []).length > 0,
+        quoteCount: String((b.quotes || []).length),
+        open: () => this.setState({ bookOpen: b.id, bookDel: false, quoteDraft: null })
+      })),
 
       showBookForm: !!bf,
       bookTitle: bf ? bf.title : "",
       bookHint: bf ? bf.hint : "",
-      bookDate: bf ? bf.date : "",
-      bookIsRead: !!bf && bf.status === "read",
       setBookTitle: e => this.patchBook("title", e.target.value),
-      setBookDate: e => this.patchBook("date", e.target.value),
       cancelBook: () => this.setState({ bookForm: null }),
       saveBook: () => this.saveBook(),
       newBook: () => this.newBook(),
-      bookStates: [["reading", "Llegint"], ["read", "Llegit"]].map(([k, label]) => {
-        const on = !!bf && bf.status === k;
-        return {
-          label,
-          pick: () => this.patchBook("status", k),
-          style: `flex:1;text-align:center;border:2px solid ${on ? "#1a1815" : "#eee9dc"};border-radius:999px;padding:11px 0;`
-            + `font-family:'Oswald',sans-serif;font-size:15px;font-weight:${on ? 600 : 500};`
-            + `color:${on ? "#1a1815" : "#a29c8c"};cursor:pointer;transition:all .25s cubic-bezier(.22,.8,.28,1)`
-        };
-      }),
 
       showBookCard: !!bo,
       cardTitle: bo ? bo.title : "",
-      cardMeta: bo ? (bo.status === "reading" ? "Llegint ara" : (bo.finishedAt || "").slice(0, 4)) : "",
-      cardIsReading: !!bo && bo.status === "reading",
-      closeBook: () => this.setState({ bookOpen: null, bookDel: false }),
-      finishBook: () => this.finishBook(bo.id),
+      cardMeta: boQuotes.length === 0 ? "Sense frases" : (boQuotes.length === 1 ? "1 frase" : boQuotes.length + " frases"),
+      quotes: boQuotes.map((text, i) => ({
+        text,
+        remove: () => this.removeQuote(bo.id, i)
+      })),
+      noQuotes: !!bo && boQuotes.length === 0 && st.quoteDraft === null,
+      quoteDrafting: st.quoteDraft !== null,
+      quoteDraft: st.quoteDraft || "",
+      canAddQuote: st.quoteDraft === null,
+      setQuoteDraft: e => this.setState({ quoteDraft: e.target.value }),
+      newQuote: () => this.setState({ quoteDraft: "" }),
+      cancelQuote: () => this.setState({ quoteDraft: null }),
+      saveQuote: () => this.saveQuote(bo.id),
+      closeBook: () => this.setState({ bookOpen: null, bookDel: false, quoteDraft: null }),
       removeBook: () => st.bookDel ? this.removeBook(bo.id) : this.setState({ bookDel: true }),
-      cardDelLabel: st.bookDel ? "Confirma que el vols treure" : "Treu del camí",
+      cardDelLabel: st.bookDel ? "Confirma que el vols suprimir" : "Suprimeix el llibre",
       cardDelStyle: `font-size:11px;letter-spacing:.12em;font-weight:700;cursor:pointer;align-self:flex-start;transition:color .25s ease;color:${st.bookDel ? "#B3121A" : "#a29c8c"}`,
 
-      showMain: !onEditor && !st.bookForm,
+      showMain: !onEditor && !st.bookForm && !st.projForm,
       showEditor: onEditor,
       isEmpty: st.systems.length === 0,
       newSystem: () => this.openNew(),
@@ -1349,7 +1537,7 @@ class Component extends DCLogic {
         const on = i === st.active;
         return {
           label,
-          go: () => this.setState({ active: i }),
+          go: () => this.goTab(i),
           style: `display:flex;flex-direction:column;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.08em;font-weight:700;cursor:pointer;color:${on ? "#1a1815" : "#a29c8c"};transition:color .3s ease`,
           mark: `width:18px;height:18px;display:block;border:2px solid ${on ? "#B3121A" : "currentColor"};background:${on ? "#B3121A" : "transparent"};border-radius:${on ? "44% 56% 60% 40% / 50% 45% 55% 50%" : "3px"};transition:all .35s cubic-bezier(.22,.8,.28,1)`
         };
